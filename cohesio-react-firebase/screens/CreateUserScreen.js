@@ -3,7 +3,7 @@ import { View,Button, TextInput, ScrollView, StyleSheet} from "react-native";
 import { collection, addDoc } from "firebase/firestore"; // Importa correctamente
 import  db  from "../database/firebase";
 
-const CreateUserScreen = () => {
+const CreateUserScreen = (props) => {
 
     const [state, setState] = useState({ // initial state using useState
         name: '',
@@ -33,6 +33,7 @@ const CreateUserScreen = () => {
                 });
             
                 console.log("Usuario agregado con éxito");
+                props.navigation.navigate('UsersList'); // Redirige a la lista de usuarios
               } catch (error) {
                 console.error("Error al agregar el usuario:", error);
               }
