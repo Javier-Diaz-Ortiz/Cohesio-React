@@ -60,6 +60,7 @@ const UserDetailScreen = (props) => {
               await deleteDoc(dbRef);
           
               console.log("Usuario eliminado correctamente");
+              props.navigation.navigate('UsersList') //nuevo
             } catch (error) {
               console.error("Error al eliminar el usuario:", error);
             }
@@ -86,6 +87,7 @@ const UserDetailScreen = (props) => {
             console.error("Error al actualizar el usuario:", error);
           }
           setUser(initialState)
+          props.navigation.navigate('UsersList') //nuevo
         };
 
     if(loading){
