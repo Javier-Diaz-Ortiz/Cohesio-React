@@ -1,9 +1,9 @@
 import React, {useEffect,useState} from "react";
-import { View, Text} from "react-native";
+import { View, Text,TouchableOpacity,StyleSheet} from "react-native";
 import { collection, onSnapshot } from "firebase/firestore";
 import db from "../database/firebase";
 import { ScrollView } from "react-native-gesture-handler";
-import { Button } from "react-native-web";
+//import { Button } from "react-native-web";
 import {ListItem , Avatar} from 'react-native-elements';
 
 const UsersList = (props) => {
@@ -29,9 +29,14 @@ const UsersList = (props) => {
                 setUsers(users); // Guarda los usuarios en el estado
                 });
     }, [])
+    // <Button title="Create User" onPress={() => props.navigation.navigate('CreateUserScreen')}/> esto es debajo en touchable opacity
     return (
         <ScrollView>
-            <Button title="Create User" onPress={() => props.navigation.navigate('CreateUserScreen')}/>
+            <View>
+                <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate('CreateUserScreen')}> 
+                    <Text>Create User</Text>
+                </TouchableOpacity>
+            </View>
             {
                 users.map(user => {
                     return (
@@ -57,5 +62,20 @@ const UsersList = (props) => {
         </ScrollView>
     );
 }
+
+const styles = StyleSheet.create({
+    button: {
+      backgroundColor: '#E37999', // Color de fondo del botón
+      paddingVertical: 12, // Espaciado vertical
+      paddingHorizontal: 20, // Espaciado horizontal
+      borderRadius: 30, // Bordes redondeados
+      shadowColor: '#000', // Sombra
+      shadowOffset: { width: 0, height: 4 }, // Desplazamiento de la sombra
+      shadowOpacity: 0.2, // Opacidad de la sombra
+      shadowRadius: 5, // Radio de la sombra
+      elevation: 5, // Elevación para Android
+      alignItems: 'center', // Centrar el texto horizontalmente
+      justifyContent: 'center', // Centrar el texto verticalmente
+    }});
 
 export default UsersList

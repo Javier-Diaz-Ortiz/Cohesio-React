@@ -1,9 +1,9 @@
 import React ,{useEffect, useState} from "react"; 
-import { View, StyleSheet,TextInput, ScrollView,Button,Alert} from "react-native";
+import { View, StyleSheet,TextInput, ScrollView,Button,TouchableOpacity,Text} from "react-native";
 import  db  from "../database/firebase";
 
 import { doc, getDoc ,deleteDoc, updateDoc} from "firebase/firestore";
-import { ActivityIndicator } from "react-native-web"; 
+import { ActivityIndicator } from "react-native"; 
 
 const UserDetailScreen = (props) => {
     console.log(props.route.params.userId) //lo que me esta pasando de la pantalla anterior
@@ -114,16 +114,22 @@ const UserDetailScreen = (props) => {
                         onChangeText={(value) => handleChangeText('phone',value) }/>
                     </View>
                     <View style={styles.inputGroup}>
-                        <Button  color="#19AC52" title="Update User " onPress={() => updateUser()}/>
+                       <TouchableOpacity style={{backgroundColor:'#19AC52'}} onPress={() => updateUser()}>
+                                           <Text>Update User</Text>
+                                       </TouchableOpacity>
                         
                     </View>
                     <View style={styles.inputGroup}>
                     
-                        <Button color="#E37999" title="Delete User " onPress={() => deleteUser()}/>
+                    <TouchableOpacity style={{backgroundColor:'#E37999'}} onPress={() => deleteUser()}>
+                                           <Text>Delete User</Text>
+                                       </TouchableOpacity>
                     </View>
                 </ScrollView>
     );
 }
+//   <Button  color="#19AC52" title="Update User " onPress={() => updateUser()}/>
+//   <Button color="#E37999" title="Delete User " onPress={() => deleteUser()}/>
 
 const styles = StyleSheet.create({
     container: {

@@ -2,6 +2,8 @@ import React ,{ useState }from "react";
 import { View,Button, TextInput, ScrollView, StyleSheet} from "react-native";
 import { collection, addDoc } from "firebase/firestore"; // Importa correctamente
 import  db  from "../database/firebase";
+import UsersList from "./UsersList";
+
 
 const CreateUserScreen = (props) => {
 
@@ -33,7 +35,7 @@ const CreateUserScreen = (props) => {
                 });
             
                 console.log("Usuario agregado con éxito");
-                props.navigation.navigate('UsersList'); // Redirige a la lista de usuarios
+                props.navigation.navigate('UsersList'); // Redirige a la lista de usuarios habia un  props. 
               } catch (error) {
                 console.error("Error al agregar el usuario:", error);
               }
