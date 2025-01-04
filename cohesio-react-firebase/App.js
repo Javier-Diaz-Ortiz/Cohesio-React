@@ -9,7 +9,8 @@ import CreateUserScreen from './screens/CreateUserScreen';
 import UserDetailScreen from './screens/UserDetailScreen';
 import CohesioMainScreen from './screens/CohesioMainScreen';
 import ProjectsScreen from './screens/ProjectsScreen';
-import Reviews from './screens/Reviews';
+import CreateReview from './screens/CreateReview';
+import ReviewScreen from './screens/ReviewScreen';
 
 function MyStack(){
   return (
@@ -18,6 +19,8 @@ function MyStack(){
       <Stack.Screen name="UsersList" component={UsersList} options={{title: 'Who are you?'}}/> 
       <Stack.Screen name="CreateUserScreen"  component={CreateUserScreen} options={{title: 'Create a new user'}}/>
       <Stack.Screen name="UserDetailScreen"  component={UserDetailScreen} options={{title: 'User Detail'}} />
+      <Stack.Screen name="ProjectsScreen"  component={ProjectsScreen} options={{title: 'Projects Screen'}} />
+      <Stack.Screen name="CreateReview"  component={CreateReview} options={{title: 'Create Review'}} />
       {/* TODO : put all screens here  */}
 
       </Stack.Navigator>

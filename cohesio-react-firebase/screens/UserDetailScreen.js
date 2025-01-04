@@ -7,7 +7,7 @@ import { ActivityIndicator } from "react-native";
 
 const UserDetailScreen = (props) => {
     console.log(props.route.params.userId) //lo que me esta pasando de la pantalla anterior
-
+    
     const initialState ={ 
         id: '',
         name: '',
@@ -127,6 +127,28 @@ const UserDetailScreen = (props) => {
                                            <Text>Delete User</Text>
                                        </TouchableOpacity>
                     </View>
+
+                    <View style={styles.inputGroup}>
+                            <TouchableOpacity
+                                style={{
+                                backgroundColor: '#6A5ACD', // Un color púrpura elegante
+                                paddingVertical: 12,
+                                paddingHorizontal: 20,
+                                borderRadius: 10,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                shadowColor: '#000',
+                                shadowOffset: { width: 0, height: 4 },
+                                shadowOpacity: 0.3,
+                                shadowRadius: 5,
+                                elevation: 4, // Sombras en Android
+                                }}
+                                onPress={() => props.navigation.navigate('ProjectsScreen',{  userId: user.id })} // Pasa el ID del usuario a la pantalla de detalles para mostrar el usuario con ese id 
+                            >
+                                <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '600' }}>View Projects</Text>
+                            </TouchableOpacity>
+                </View>
+
                 </ScrollView>
     );
 }
