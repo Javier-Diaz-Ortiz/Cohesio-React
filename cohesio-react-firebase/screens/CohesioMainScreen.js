@@ -12,11 +12,11 @@ const CohesioMainScreen = (props) => {
   const oPositions = useRef([]);
 
   useEffect(() => {
-    // Fondo animado con una transición más dinámica y fluida, como un degradado
+    // Fondo animado con una transición más dinámica
     Animated.loop(
       Animated.timing(gradientAnimation, {
         toValue: 1,
-        duration: 10000, // Duración de la animación (más suave)
+        duration: 15000, // Tiempo más largo para una animación más suave
         useNativeDriver: false, // No usamos el driver nativo para interpolación de colores
       })
     ).start();
@@ -73,15 +73,15 @@ const CohesioMainScreen = (props) => {
     animateParticle(particle, isTitleParticle);
   };
 
-  // Interpolación dinámica para el fondo, creando un degradado continuo
+  // Interpolación de colores con una transición más dinámica
   const interpolateColors = gradientAnimation.interpolate({
     inputRange: [0, 0.25, 0.5, 0.75, 1],
     outputRange: [
       'rgba(74, 144, 226, 1)',  // Color inicial
-      'rgba(123, 67, 151, 1)',  // Primer color intermedio
-      'rgba(255, 183, 77, 1)',  // Segundo color intermedio
-      'rgba(252, 112, 112, 1)', // Tercer color intermedio
-      'rgba(74, 144, 226, 1)',  // Color final (igual al inicial para crear el bucle)
+      'rgba(123, 67, 151, 1)',  // Color intermedio 1
+      'rgba(255, 183, 77, 1)',  // Color intermedio 2
+      'rgba(252, 112, 112, 1)', // Color intermedio 3
+      'rgba(74, 144, 226, 1)',  // Mismo color inicial al final para cerrar el loop
     ],
   });
 
@@ -96,7 +96,7 @@ const CohesioMainScreen = (props) => {
 
   return (
     <View style={styles.container}>
-      {/* Fondo dinámico con degradado continuo */}
+      {/* Fondo dinámico con una transición de colores más suave */}
       <Animated.View
         style={[
           styles.background,
