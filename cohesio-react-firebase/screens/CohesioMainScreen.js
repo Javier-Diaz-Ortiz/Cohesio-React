@@ -77,11 +77,11 @@ const CohesioMainScreen = (props) => {
   const interpolateColors = gradientAnimation.interpolate({
     inputRange: [0, 0.25, 0.5, 0.75, 1],
     outputRange: [
-      'rgba(74, 144, 226, 1)',  // Azul claro (color principal del texto y botones)
-      'rgba(123, 67, 151, 1)',  // Morado (color secundario de los botones)
-      'rgba(255, 183, 77, 1)',  // Amarillo cálido (complementario con el diseño)
-      'rgba(252, 112, 112, 1)', // Rosa suave
-      'rgba(74, 144, 226, 1)',  // Azul claro (de nuevo para crear el bucle)
+      'rgba(74, 144, 226, 1)',  // Color inicial
+      'rgba(123, 67, 151, 1)',  // Primer color intermedio
+      'rgba(255, 183, 77, 1)',  // Segundo color intermedio
+      'rgba(252, 112, 112, 1)', // Tercer color intermedio
+      'rgba(74, 144, 226, 1)',  // Color final (igual al inicial para crear el bucle)
     ],
   });
 
@@ -131,7 +131,7 @@ const CohesioMainScreen = (props) => {
             width: particle.size,
             height: particle.size,
             borderRadius: particle.size / 2,
-            backgroundColor: 'rgba(255, 183, 77, 0.8)', // Amarillo cálido
+            backgroundColor: 'rgba(255, 183, 77, 0.8)',
             opacity: particle.opacity,
             transform: [{ translateX: particle.x }, { translateY: particle.y }],
           }}
