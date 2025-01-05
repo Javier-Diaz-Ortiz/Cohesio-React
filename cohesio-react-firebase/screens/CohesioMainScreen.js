@@ -12,11 +12,11 @@ const CohesioMainScreen = (props) => {
   const oPositions = useRef([]);
 
   useEffect(() => {
-    // Fondo animado con una transición más dinámica
+    // Fondo animado con una transición más dinámica y fluida, como un degradado
     Animated.loop(
       Animated.timing(gradientAnimation, {
         toValue: 1,
-        duration: 15000, // Tiempo más largo para una animación más suave
+        duration: 10000, // Duración de la animación (más suave)
         useNativeDriver: false, // No usamos el driver nativo para interpolación de colores
       })
     ).start();
@@ -73,15 +73,15 @@ const CohesioMainScreen = (props) => {
     animateParticle(particle, isTitleParticle);
   };
 
-  // Interpolación de colores con una transición más dinámica
+  // Interpolación dinámica para el fondo, creando un degradado continuo
   const interpolateColors = gradientAnimation.interpolate({
     inputRange: [0, 0.25, 0.5, 0.75, 1],
     outputRange: [
-      'rgba(74, 144, 226, 1)',  // Color inicial
-      'rgba(123, 67, 151, 1)',  // Color intermedio 1
-      'rgba(255, 183, 77, 1)',  // Color intermedio 2
-      'rgba(252, 112, 112, 1)', // Color intermedio 3
-      'rgba(74, 144, 226, 1)',  // Mismo color inicial al final para cerrar el loop
+      'rgba(74, 144, 226, 1)',  // Azul claro (color principal del texto y botones)
+      'rgba(123, 67, 151, 1)',  // Morado (color secundario de los botones)
+      'rgba(255, 183, 77, 1)',  // Amarillo cálido (complementario con el diseño)
+      'rgba(252, 112, 112, 1)', // Rosa suave
+      'rgba(74, 144, 226, 1)',  // Azul claro (de nuevo para crear el bucle)
     ],
   });
 
@@ -96,7 +96,7 @@ const CohesioMainScreen = (props) => {
 
   return (
     <View style={styles.container}>
-      {/* Fondo dinámico con una transición de colores más suave */}
+      {/* Fondo dinámico con degradado continuo */}
       <Animated.View
         style={[
           styles.background,
@@ -131,7 +131,7 @@ const CohesioMainScreen = (props) => {
             width: particle.size,
             height: particle.size,
             borderRadius: particle.size / 2,
-            backgroundColor: 'rgba(255, 183, 77, 0.8)',
+            backgroundColor: 'rgba(255, 183, 77, 0.8)', // Amarillo cálido
             opacity: particle.opacity,
             transform: [{ translateX: particle.x }, { translateY: particle.y }],
           }}
