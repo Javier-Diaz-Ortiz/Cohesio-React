@@ -95,18 +95,9 @@ const CohesioMainScreen = (props) => {
 
   return (
     <View style={styles.container}>
-      {/* Fondo dinámico con degradado continuo */}
-      <Animated.View
-        style={[
-          styles.background,
-          {
-            backgroundColor: interpolateColors,
-          },
-        ]}
-      />
 
-      {/* Partículas de fondo */}
-      {particles.current.map((particle, index) => (
+        {/* Partículas de fondo */}
+        {particles.current.map((particle, index) => (
         <Animated.View
           key={`particle-${index}`}
           style={{
@@ -137,7 +128,18 @@ const CohesioMainScreen = (props) => {
             transform: [{ translateX: particle.x }, { translateY: particle.y }],
           }}
         />
-      ))}
+      ))}  
+      {/* Fondo dinámico con degradado continuo */}
+      <Animated.View
+        style={[
+          styles.background,
+          {
+            backgroundColor: interpolateColors,
+          },
+        ]}
+      />
+
+    
 
       {/* Título */}
       <View style={styles.titleContainer}>
