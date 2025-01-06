@@ -2,8 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-const PARTICLE_COUNT = 50;
-const TITLE_PARTICLE_COUNT = 10;
+const PARTICLE_COUNT = 30; // Reducido para mejorar rendimiento
+const TITLE_PARTICLE_COUNT = 5;
 
 const CohesioMainScreen = (props) => {
   const [gradientAnimation] = useState(new Animated.Value(0));
@@ -12,12 +12,12 @@ const CohesioMainScreen = (props) => {
   const oPositions = useRef([]);
 
   useEffect(() => {
-    // Fondo animado con una transición más dinámica y fluida, como un degradado
+    // Animación del fondo
     Animated.loop(
       Animated.timing(gradientAnimation, {
         toValue: 1,
-        duration: 10000, // Duración de la animación (más suave)
-        useNativeDriver: false, // No usamos el driver nativo para interpolación de colores
+        duration: 20000, // Animación más lenta para menos actualizaciones
+        useNativeDriver: false,
       })
     ).start();
 
@@ -34,9 +34,9 @@ const CohesioMainScreen = (props) => {
     const particleArray = Array.from({ length: count }, () => ({
       x: new Animated.Value(Math.random() * screenWidth),
       y: new Animated.Value(isTitle ? -50 : Math.random() * screenHeight),
-      size: Math.random() * 8 + 3,
+      size: Math.random() * 10 + 5, // Tamaño más grande para mayor visibilidad
       opacity: new Animated.Value(1),
-      duration: Math.random() * 5000 + 3000,
+      duration: Math.random() * 8000 + 5000, // Animación más larga
     }));
     particleRef.current = particleArray;
   };
@@ -59,7 +59,7 @@ const CohesioMainScreen = (props) => {
         useNativeDriver: true,
       }),
       Animated.timing(particle.opacity, {
-        toValue: Math.random(),
+        toValue: Math.random() * 0.5 + 0.5, // Opacidad entre 0.5 y 1
         duration: particle.duration,
         useNativeDriver: true,
       }),
@@ -73,15 +73,14 @@ const CohesioMainScreen = (props) => {
     animateParticle(particle, isTitleParticle);
   };
 
-  // Interpolación dinámica para el fondo, creando un degradado continuo
   const interpolateColors = gradientAnimation.interpolate({
     inputRange: [0, 0.25, 0.5, 0.75, 1],
     outputRange: [
-      'rgba(74, 144, 226, 1)',  // Azul claro (color principal del texto y botones)
-      'rgba(123, 67, 151, 1)',  // Morado (color secundario de los botones)
-      'rgba(255, 183, 77, 1)',  // Amarillo cálido (complementario con el diseño)
-      'rgba(252, 112, 112, 1)', // Rosa suave
-      'rgba(74, 144, 226, 1)',  // Azul claro (de nuevo para crear el bucle)
+      'rgba(74, 144, 226, 1)',
+      'rgba(123, 67, 151, 1)',
+      'rgba(255, 183, 77, 1)',
+      'rgba(252, 112, 112, 1)',
+      'rgba(74, 144, 226, 1)',
     ],
   });
 
@@ -112,6 +111,7 @@ const CohesioMainScreen = (props) => {
           key={`particle-${index}`}
           style={{
             position: 'absolute',
+            zIndex: 1,
             width: particle.size,
             height: particle.size,
             borderRadius: particle.size / 2,
@@ -128,10 +128,11 @@ const CohesioMainScreen = (props) => {
           key={`title-particle-${index}`}
           style={{
             position: 'absolute',
+            zIndex: 2,
             width: particle.size,
             height: particle.size,
             borderRadius: particle.size / 2,
-            backgroundColor: 'rgba(255, 183, 77, 0.8)', // Amarillo cálido
+            backgroundColor: 'rgba(255, 183, 77, 0.8)',
             opacity: particle.opacity,
             transform: [{ translateX: particle.x }, { translateY: particle.y }],
           }}
@@ -144,14 +145,14 @@ const CohesioMainScreen = (props) => {
           C
           <Text
             style={styles.strikethrough}
-            onLayout={(event) => handleTitleLayout(event, 0)} // Obtiene la posición de la primera "O"
+            onLayout={(event) => handleTitleLayout(event, 0)}
           >
             o
           </Text>
           hesi
           <Text
-            style={styles.lastO}  // Última "O" en blanco
-            onLayout={(event) => handleTitleLayout(event, 1)} // Obtiene la posición de la segunda "O"
+            style={styles.lastO}
+            onLayout={(event) => handleTitleLayout(event, 1)}
           >
             o
           </Text>
@@ -180,11 +181,11 @@ const CohesioMainScreen = (props) => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  background: { ...StyleSheet.absoluteFillObject },
-  titleContainer: { marginBottom: 40, alignItems: 'center' },
+  background: { ...StyleSheet.absoluteFillObject, zIndex: 0 },
+  titleContainer: { marginBottom: 40, alignItems: 'center', zIndex: 3 },
   title: { fontSize: 50, fontWeight: 'bold', color: '#fff', textAlign: 'center' },
   strikethrough: { textDecorationLine: 'line-through', color: '#FFB74D', fontSize: 50 },
-  lastO: { color: '#FFFFFF', fontSize: 50 },  // Estilo para la última "O" en blanco
+  lastO: { color: '#FFFFFF', fontSize: 50 },
   smallButton: {
     backgroundColor: '#FFFFFF',
     paddingVertical: 10,
