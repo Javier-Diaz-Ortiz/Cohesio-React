@@ -10,15 +10,9 @@ const CohesioMainScreen = (props) => {
   const particles = useRef([]);
   const titleParticles = useRef([]);
   const oPositions = useRef([]);
+  const [isLoaded, setIsLoaded] = useState(false); // Estado para forzar una actualización
 
   useEffect(() => {
-     // Inicializar partículas
-     initializeParticles(particles, PARTICLE_COUNT, false);
-     initializeParticles(titleParticles, TITLE_PARTICLE_COUNT, true);
- 
-     // Animar partículas
-     particles.current.forEach((particle) => animateParticle(particle));
-     titleParticles.current.forEach((particle) => animateParticle(particle, true));
     // Animación del fondo
     Animated.loop(
       Animated.timing(gradientAnimation, {
@@ -28,8 +22,21 @@ const CohesioMainScreen = (props) => {
       })
     ).start();
 
-   
+    // Inicializar partículas
+    initializeParticles(particles, PARTICLE_COUNT, false);
+    initializeParticles(titleParticles, TITLE_PARTICLE_COUNT, true);
+
+    // Forzar actualización tras montar
+    setIsLoaded(true);
   }, []);
+
+  useEffect(() => {
+    if (isLoaded) {
+      // Animar partículas después de la actualización
+      particles.current.forEach((particle) => animateParticle(particle));
+      titleParticles.current.forEach((particle) => animateParticle(particle, true));
+    }
+  }, [isLoaded]);
 
   const initializeParticles = (particleRef, count, isTitle) => {
     const particleArray = Array.from({ length: count }, () => ({
@@ -96,9 +103,18 @@ const CohesioMainScreen = (props) => {
 
   return (
     <View style={styles.container}>
+      {/* Fondo dinámico con degradado continuo */}
+      <Animated.View
+        style={[
+          styles.background,
+          {
+            backgroundColor: interpolateColors,
+          },
+        ]}
+      />
 
-        {/* Partículas de fondo */}
-        {particles.current.map((particle, index) => (
+      {/* Partículas de fondo */}
+      {particles.current.map((particle, index) => (
         <Animated.View
           key={`particle-${index}`}
           style={{
@@ -129,18 +145,7 @@ const CohesioMainScreen = (props) => {
             transform: [{ translateX: particle.x }, { translateY: particle.y }],
           }}
         />
-      ))}  
-      {/* Fondo dinámico con degradado continuo */}
-      <Animated.View
-        style={[
-          styles.background,
-          {
-            backgroundColor: interpolateColors,
-          },
-        ]}
-      />
-
-    
+      ))}
 
       {/* Título */}
       <View style={styles.titleContainer}>
