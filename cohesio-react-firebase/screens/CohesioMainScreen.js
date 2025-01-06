@@ -12,6 +12,13 @@ const CohesioMainScreen = (props) => {
   const oPositions = useRef([]);
 
   useEffect(() => {
+     // Inicializar partículas
+     initializeParticles(particles, PARTICLE_COUNT, false);
+     initializeParticles(titleParticles, TITLE_PARTICLE_COUNT, true);
+ 
+     // Animar partículas
+     particles.current.forEach((particle) => animateParticle(particle));
+     titleParticles.current.forEach((particle) => animateParticle(particle, true));
     // Animación del fondo
     Animated.loop(
       Animated.timing(gradientAnimation, {
@@ -21,13 +28,7 @@ const CohesioMainScreen = (props) => {
       })
     ).start();
 
-    // Inicializar partículas
-    initializeParticles(particles, PARTICLE_COUNT, false);
-    initializeParticles(titleParticles, TITLE_PARTICLE_COUNT, true);
-
-    // Animar partículas
-    particles.current.forEach((particle) => animateParticle(particle));
-    titleParticles.current.forEach((particle) => animateParticle(particle, true));
+   
   }, []);
 
   const initializeParticles = (particleRef, count, isTitle) => {
