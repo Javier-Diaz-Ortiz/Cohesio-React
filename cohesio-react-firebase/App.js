@@ -21,6 +21,7 @@ function MyStack(){
       <Stack.Screen name="UserDetailScreen"  component={UserDetailScreen} options={{title: 'User Detail'}} />
       <Stack.Screen name="ProjectsScreen"  component={ProjectsScreen} options={{title: 'Projects Screen'}} />
       <Stack.Screen name="CreateReview"  component={CreateReview} options={{title: 'Create Review'}} />
+      <Stack.Screen name="ReviewScreen"  component={ReviewScreen} options={{title: 'Review Screen'}} />
       {/* TODO : put all screens here  */}
 
       </Stack.Navigator>
