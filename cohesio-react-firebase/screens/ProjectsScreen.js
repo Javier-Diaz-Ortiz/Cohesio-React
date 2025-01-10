@@ -5,7 +5,7 @@ import db from "../database/firebase";
 import { ScrollView } from "react-native-gesture-handler";
 import { ListItem, Avatar } from "react-native-elements";
 
-const ProjectsScreen = (props) => {
+const ProjectsScreen = (props) => { //TODO : asociar projectos a un usario porq sino le sale a todos los usuarios toos los proyectos
   console.log(props.route.params.userId);
 
   const [projects, setProjects] = useState([]);
