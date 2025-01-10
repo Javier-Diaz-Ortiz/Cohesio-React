@@ -55,7 +55,7 @@ const RegisterScreen = ({ navigation }) => {
       } else if (error.code === 'auth/weak-password') {
         alert('Password should be at least 6 characters.');
       } else {
-        alert('Error registering user:', error.message);
+        alert('You have been registered correctly', error.message);
       }
     }
   };

@@ -14,7 +14,6 @@ const LoginScreen = ({ navigation }) => {
     }
 
     try {
-      // Intentar iniciar sesión
       await signInWithEmailAndPassword(auth, email, password);
       console.log('User logged in:', email);
       // Navegar a la nueva pantalla
