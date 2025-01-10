@@ -183,6 +183,18 @@ const CohesioMainScreen = (props) => {
           View Users
         </Text>
       </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.smallButton}
+        onPress={() => props.navigation.navigate('LoginScreen')}
+      >
+        <Text style={styles.buttonText}>Login</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.smallButton, styles.secondaryButton]}
+        onPress={() => props.navigation.navigate('RegisterScreen')}
+      >
+        <Text style={[styles.buttonText, styles.secondaryButtonText]}>Register</Text>
+      </TouchableOpacity>
     </View>
   );
 };
