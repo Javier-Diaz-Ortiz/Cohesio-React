@@ -12,6 +12,8 @@ import { collection, addDoc } from "firebase/firestore";
 import db from "../database/firebase";
 
 const CreateReview = (props) => {
+  const userId = props.route.params?.userId; // Obtén el userId pasado como prop
+
   const [state, setState] = useState({
     direction: "",
     block: "",
@@ -35,6 +37,7 @@ const CreateReview = (props) => {
         const projectsCollection = collection(db, "projects");
 
         await addDoc(projectsCollection, {
+          userId, // Incluye el userId asociado al proyecto
           direction: state.direction,
           block: state.block,
           floor: state.floor,
@@ -42,7 +45,7 @@ const CreateReview = (props) => {
         });
 
         console.log("Proyecto agregado con éxito");
-        props.navigation.navigate("ProjectsScreen",{userId: state.userId});
+        props.navigation.navigate("ProjectsScreen", { userId }); // Navega de regreso con el userId
       } catch (error) {
         console.error("Error al agregar el proyecto:", error);
       }
@@ -60,7 +63,9 @@ const CreateReview = (props) => {
     <ScrollView style={styles.container}>
       {["direction", "block", "floor", "apartment"].map((field, index) => (
         <View style={styles.inputGroup} key={index}>
-          <Text style={styles.label}>{field.charAt(0).toUpperCase() + field.slice(1)}</Text>
+          <Text style={styles.label}>
+            {field.charAt(0).toUpperCase() + field.slice(1)}
+          </Text>
           <TouchableOpacity
             style={styles.dropdown}
             onPress={() => {
