@@ -7,7 +7,7 @@ import { ListItem, Avatar } from "react-native-elements";
 
 const ProjectsScreen = (props) => { //TODO : asociar projectos a un usario porq sino le sale a todos los usuarios toos los proyectos
   console.log(props.route.params.userId);
-
+ //TODO : poder eliminar reviews porque sino habra infinitos 
   const [projects, setProjects] = useState([]);
 
   useEffect(() => {
