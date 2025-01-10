@@ -99,12 +99,73 @@ const RegisterScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', padding: 20 },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20, textAlign: 'center' },
-  input: { borderWidth: 1, padding: 10, marginBottom: 10, borderRadius: 5 },
-  button: { backgroundColor: '#007BFF', padding: 15, borderRadius: 5, alignItems: 'center' },
-  buttonText: { color: '#FFFFFF', fontWeight: 'bold' },
-  linkText: { color: '#007BFF', textAlign: 'center', marginTop: 10 },
+  container: { 
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    padding: 20, 
+    backgroundColor: '#f4f4f9' // Fondo suave para un toque profesional
+  },
+  title: { 
+    fontSize: 28, 
+    fontWeight: 'bold', 
+    marginBottom: 30, 
+    textAlign: 'center', 
+    color: '#333', // Color oscuro para mayor contraste
+  },
+  input: { 
+    width: '100%', 
+    height: 50, 
+    borderWidth: 1, 
+    borderColor: '#ddd', // Color de borde suave
+    backgroundColor: '#fff', 
+    paddingHorizontal: 15, 
+    marginBottom: 15, 
+    borderRadius: 8, 
+    fontSize: 16, 
+    color: '#333', 
+    shadowColor: '#000', 
+    shadowOpacity: 0.1, 
+    shadowOffset: { width: 0, height: 2 }, 
+    elevation: 2 // Sombra sutil para los inputs
+  },
+  button: { 
+    backgroundColor: '#2a9d8f', // Color verde elegante
+    paddingVertical: 15, 
+    borderRadius: 8, 
+    width: '100%', 
+    alignItems: 'center', 
+    marginTop: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2
+  },
+  buttonText: { 
+    color: '#fff', 
+    fontSize: 18, 
+    fontWeight: 'bold' 
+  },
+  linkText: { 
+    color: '#2a9d8f', 
+    textAlign: 'center', 
+    marginTop: 15, 
+    fontSize: 16 
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 20,
+  },
+  footerText: {
+    fontSize: 14,
+    color: '#666',
+  },
+  footerLink: {
+    color: '#2a9d8f',
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
 });
 
 export default RegisterScreen;
