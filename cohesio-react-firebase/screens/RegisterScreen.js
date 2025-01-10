@@ -10,13 +10,11 @@ const RegisterScreen = ({ navigation }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const validatePassword = (password) => {
-    // Contraseña debe tener al menos 6 caracteres, una letra mayúscula, una letra minúscula y un número
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
     return passwordRegex.test(password);
   };
 
   const validateEmail = (email) => {
-    // Validación básica de email usando una expresión regular
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
   };
@@ -38,20 +36,18 @@ const RegisterScreen = ({ navigation }) => {
     }
 
     try {
-      // Registrar usuario con Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Guardar información adicional en Firestore
       await setDoc(doc(db, 'users', user.uid), {
         email: user.email,
         createdAt: new Date(),
       });
 
       console.log('User registered and saved to Firestore:', user);
-      navigation.navigate('LoginScreen'); // Navegar a la pantalla de login después de registrar al usuario
+      navigation.navigate('LoginScreen'); 
     } catch (error) {
-      // Muestra un mensaje más claro dependiendo del error
+      
       if (error.code === 'auth/email-already-in-use') {
         alert('The email address is already in use.');
       } else if (error.code === 'auth/invalid-email') {
@@ -127,10 +123,10 @@ const styles = StyleSheet.create({
     shadowColor: '#000', 
     shadowOpacity: 0.1, 
     shadowOffset: { width: 0, height: 2 }, 
-    elevation: 2 // Sombra sutil para los inputs
+    elevation: 2 
   },
   button: { 
-    backgroundColor: '#2a9d8f', // Color verde elegante
+    backgroundColor: '#2a9d8f', 
     paddingVertical: 15, 
     borderRadius: 8, 
     width: '100%', 

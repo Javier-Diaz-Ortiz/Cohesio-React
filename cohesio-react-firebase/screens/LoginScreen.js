@@ -1,13 +1,35 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../database/firebase'; // Asegúrate de tener bien configurada tu conexión a Firebase
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
-    // Implementar lógica de autenticación
-    console.log('Login con:', email, password);
+  const handleLogin = async () => {
+    if (!email || !password) {
+      alert('Please enter both email and password');
+      return;
+    }
+
+    try {
+      // Intentamos autenticar al usuario con el correo y la contraseña proporcionados
+      await signInWithEmailAndPassword(auth, email, password);
+      console.log('User logged in:', email);
+      // Si la autenticación es exitosa, navegamos a la pantalla principal o inicio
+      navigation.navigate('HomeScreen'); // Cambia esto según tu navegación
+    } catch (error) {
+      if (error.code === 'auth/user-not-found') {
+        Alert.alert('Error', 'The email address is not registered.');
+      } else if (error.code === 'auth/wrong-password') {
+        Alert.alert('Error', 'The password is incorrect.');
+      } else if (error.code === 'auth/invalid-email') {
+        Alert.alert('Error', 'The email address is invalid.');
+      } else {
+        Alert.alert('Error', 'An unexpected error occurred: ' + error.message);
+      }
+    }
   };
 
   return (
@@ -43,20 +65,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center', 
     alignItems: 'center', 
     padding: 20, 
-    backgroundColor: '#f4f4f9' // Fondo suave para un toque profesional
+    backgroundColor: '#f4f4f9' 
   },
   title: { 
     fontSize: 28, 
     fontWeight: 'bold', 
     marginBottom: 30, 
     textAlign: 'center', 
-    color: '#333', // Color oscuro para mayor contraste
+    color: '#333',
   },
   input: { 
     width: '100%', 
     height: 50, 
     borderWidth: 1, 
-    borderColor: '#ddd', // Color de borde suave
+    borderColor: '#ddd', 
     backgroundColor: '#fff', 
     paddingHorizontal: 15, 
     marginBottom: 15, 
@@ -66,10 +88,10 @@ const styles = StyleSheet.create({
     shadowColor: '#000', 
     shadowOpacity: 0.1, 
     shadowOffset: { width: 0, height: 2 }, 
-    elevation: 2 // Sombra sutil para los inputs
+    elevation: 2 
   },
   button: { 
-    backgroundColor: '#2a9d8f', // Color verde elegante
+    backgroundColor: '#2a9d8f', 
     paddingVertical: 15, 
     borderRadius: 8, 
     width: '100%', 
@@ -90,20 +112,6 @@ const styles = StyleSheet.create({
     textAlign: 'center', 
     marginTop: 15, 
     fontSize: 16 
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 20,
-  },
-  footerText: {
-    fontSize: 14,
-    color: '#666',
-  },
-  footerLink: {
-    color: '#2a9d8f',
-    fontWeight: 'bold',
-    fontSize: 14,
   },
 });
 
