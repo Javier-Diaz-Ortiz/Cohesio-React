@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../database/firebase'; // Asegúrate de tener bien configurada tu conexión a Firebase
+import { auth } from '../database/firebase'; // Asegúrate de tener configurada tu conexión a Firebase
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -9,25 +9,25 @@ const LoginScreen = ({ navigation }) => {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      alert('Please enter both email and password');
+      Alert.alert('Error', 'Please enter both email and password');
       return;
     }
 
     try {
-      // Intentamos autenticar al usuario con el correo y la contraseña proporcionados
+      // Intentar iniciar sesión
       await signInWithEmailAndPassword(auth, email, password);
       console.log('User logged in:', email);
-      // Si la autenticación es exitosa, navegamos a la pantalla principal o inicio
-      navigation.navigate('HomeScreen'); // Cambia esto según tu navegación
+      // Navegar a la nueva pantalla
+      navigation.navigate('UserHomeScreen');
     } catch (error) {
       if (error.code === 'auth/user-not-found') {
-        Alert.alert('Error', 'The email address is not registered.');
+        alert('The email address is not registered.');
       } else if (error.code === 'auth/wrong-password') {
-        Alert.alert('Error', 'The password is incorrect.');
+        alert('The password is incorrect.');
       } else if (error.code === 'auth/invalid-email') {
-        Alert.alert('Error', 'The email address is invalid.');
+        alert( 'The email address is invalid.');
       } else {
-        Alert.alert('Error', 'An unexpected error occurred: ' + error.message);
+        alert( 'An unexpected error occurred: ' + error.message);
       }
     }
   };
