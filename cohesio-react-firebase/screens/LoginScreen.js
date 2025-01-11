@@ -1,32 +1,39 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../database/firebase'; // Asegúrate de tener configurada tu conexión a Firebase
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState({ email: '', password: '', general: '' });
 
   const handleLogin = async () => {
+    setError({ email: '', password: '', general: '' }); // Reinicia los errores
+
+    if (!email) {
+      setError((prev) => ({ ...prev, email: 'Email is required' }));
+    }
+    if (!password) {
+      setError((prev) => ({ ...prev, password: 'Password is required' }));
+    }
     if (!email || !password) {
-      Alert.alert('Error', 'Please enter both email and password');
       return;
     }
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
       console.log('User logged in:', email);
-      // Navegar a la nueva pantalla
       navigation.navigate('UserHomeScreen');
     } catch (error) {
       if (error.code === 'auth/user-not-found') {
-        alert('The email address is not registered.');
+        setError((prev) => ({ ...prev, general: 'The email address is not registered.' }));
       } else if (error.code === 'auth/wrong-password') {
-        alert('The password is incorrect.');
+        setError((prev) => ({ ...prev, password: 'The password is incorrect.' }));
       } else if (error.code === 'auth/invalid-email') {
-        alert( 'The email address is invalid.');
+        setError((prev) => ({ ...prev, email: 'The email address is invalid.' }));
       } else {
-        alert( 'An unexpected error occurred: ' + error.message);
+        setError((prev) => ({ ...prev, general: `An unexpected error occurred: ${error.message}` }));
       }
     }
   };
@@ -41,6 +48,7 @@ const LoginScreen = ({ navigation }) => {
         onChangeText={setEmail}
         keyboardType="email-address"
       />
+      {error.email ? <Text style={styles.errorText}>{error.email}</Text> : null}
       <TextInput
         style={styles.input}
         placeholder="Password"
@@ -48,9 +56,11 @@ const LoginScreen = ({ navigation }) => {
         onChangeText={setPassword}
         secureTextEntry
       />
+      {error.password ? <Text style={styles.errorText}>{error.password}</Text> : null}
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Log in</Text>
       </TouchableOpacity>
+      {error.general ? <Text style={styles.errorText}>{error.general}</Text> : null}
       <TouchableOpacity onPress={() => navigation.navigate('RegisterScreen')}>
         <Text style={styles.linkText}>Don't have an account? Register</Text>
       </TouchableOpacity>
@@ -59,58 +69,65 @@ const LoginScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    padding: 20, 
-    backgroundColor: '#f4f4f9' 
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: '#f4f4f9',
   },
-  title: { 
-    fontSize: 28, 
-    fontWeight: 'bold', 
-    marginBottom: 30, 
-    textAlign: 'center', 
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginBottom: 30,
+    textAlign: 'center',
     color: '#333',
   },
-  input: { 
-    width: '100%', 
-    height: 50, 
-    borderWidth: 1, 
-    borderColor: '#ddd', 
-    backgroundColor: '#fff', 
-    paddingHorizontal: 15, 
-    marginBottom: 15, 
-    borderRadius: 8, 
-    fontSize: 16, 
-    color: '#333', 
-    shadowColor: '#000', 
-    shadowOpacity: 0.1, 
-    shadowOffset: { width: 0, height: 2 }, 
-    elevation: 2 
+  input: {
+    width: '100%',
+    height: 50,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    backgroundColor: '#fff',
+    paddingHorizontal: 15,
+    marginBottom: 5, // Espacio más ajustado
+    borderRadius: 8,
+    fontSize: 16,
+    color: '#333',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2,
   },
-  button: { 
-    backgroundColor: '#2a9d8f', 
-    paddingVertical: 15, 
-    borderRadius: 8, 
-    width: '100%', 
-    alignItems: 'center', 
+  errorText: {
+    color: '#e63946', // Rojo suave
+    fontSize: 14,
+    marginBottom: 10,
+    textAlign: 'left',
+    width: '100%',
+  },
+  button: {
+    backgroundColor: '#2a9d8f',
+    paddingVertical: 15,
+    borderRadius: 8,
+    width: '100%',
+    alignItems: 'center',
     marginTop: 10,
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
-    elevation: 2
+    elevation: 2,
   },
-  buttonText: { 
-    color: '#fff', 
-    fontSize: 18, 
-    fontWeight: 'bold' 
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
-  linkText: { 
-    color: '#2a9d8f', 
-    textAlign: 'center', 
-    marginTop: 15, 
-    fontSize: 16 
+  linkText: {
+    color: '#2a9d8f',
+    textAlign: 'center',
+    marginTop: 15,
+    fontSize: 16,
   },
 });
 
