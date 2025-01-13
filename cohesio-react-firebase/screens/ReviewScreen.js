@@ -19,6 +19,7 @@ import db from "../database/firebase"; // Configuración de Firebase
 import { jsPDF } from "jspdf"; // Para Web
 
 const ReviewScreen = (props) => {
+  const projectId = props.route.params.projectId; // ID del usuario actual
   const [selectedData, setSelectedData] = useState({
     direction: props.route.params?.direction || "",
     block: props.route.params?.block || "",
@@ -126,6 +127,7 @@ const ReviewScreen = (props) => {
         redRooms: redRooms.map((room) => room.name),
         comment: comment || "No comment provided",
         photo: photo ? photo.uri : null,
+        projectId: projectId,
         timestamp: new Date(),
       });
       Alert.alert("Success", "Project saved successfully!");
