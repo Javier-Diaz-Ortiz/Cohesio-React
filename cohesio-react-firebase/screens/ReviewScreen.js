@@ -1,3 +1,7 @@
+import * as MediaLibrary from 'expo-media-library';
+import * as Print from 'expo-print';
+
+import * as Sharing from "expo-sharing";
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -30,6 +34,19 @@ const ReviewScreen = (props) => {
   const [constructorEmail, setConstructorEmail] = useState("");
   const [comment, setComment] = useState("");
   const [photo, setPhoto] = useState(null);
+
+   //Permissions
+   const checkPermissions = async () => {
+    const { status } = await MediaLibrary.requestPermissionsAsync();
+    if (status !== 'granted') {
+      console.log("You need to grant permission to access media library.");
+    }
+  };
+
+  //Check for permissions
+  useEffect(() => {
+    checkPermissions();
+  }, []);
 
   useEffect(() => {
     generateRooms(selectedData);
@@ -116,14 +133,11 @@ const ReviewScreen = (props) => {
     } else {
       // Usar react-native-html-to-pdf en Android
       try {
-        const pdf = await RNHTMLtoPDF.convert({
-          html: htmlContent,
-          fileName: "Inspection_Report",
-          directory: "Documents",
-          base64: true,
-        });
-
-        return pdf.filePath;
+        const { uri } = await Print.printToFileAsync({ html: htmlContent });
+        if (Platform.OS !== "web" && await Sharing.isAvailableAsync()) {
+          await Sharing.shareAsync(uri);
+        }
+        return uri;
       } catch (error) {
         console.error("Error generating PDF:", error);
         Alert.alert("Error", "Failed to generate PDF.");
@@ -133,8 +147,8 @@ const ReviewScreen = (props) => {
   };
 
   const sendEmailWithPDF = async () => {
-    if (!constructorEmail) {
-      Alert.alert("Error", "Please provide the constructor's email address.");
+    if (!constructorEmail || !/\S+@\S+\.\S+/.test(constructorEmail)) {
+      Alert.alert("Error", "Please enter a valid email address.");
       return;
     }
 
@@ -142,7 +156,7 @@ const ReviewScreen = (props) => {
     if (!pdfPath) return;
 
     if (Platform.OS === 'web') {
-      window.open(pdfPath); // Para la web, solo se abre el archivo PDF generado
+      window.open(pdfPath); // For web, opens generated PDF.
       Alert.alert("Success", "PDF is ready to be downloaded.");
     } else {
       // Enviar el correo con la aplicación nativa
@@ -226,8 +240,11 @@ const ReviewScreen = (props) => {
         style={styles.input}
         placeholder="Constructor's Email"
         value={constructorEmail}
-        onChangeText={setConstructorEmail}
+        onChangeText={(email) => {
+          setConstructorEmail(email.trim()); 
+        }}
       />
+      
 
       <TextInput
         style={[styles.input, styles.commentInput]}
