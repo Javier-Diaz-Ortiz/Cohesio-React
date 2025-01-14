@@ -20,6 +20,7 @@ import { jsPDF } from "jspdf"; // Para Web
 
 const ReviewScreen = (props) => {
   const [selectedData, setSelectedData] = useState({
+    email : props.route.params.emailOfUser, //EL EMAIL PARA EL CORREO ;EL QUE ENVIAAAAAAAAA
     direction: props.route.params?.direction || "",
     block: props.route.params?.block || "",
     floor: props.route.params?.floor || "",
@@ -132,6 +133,12 @@ const ReviewScreen = (props) => {
     }
   };
 
+  function mandarEmail(){
+    console.log("mandar email")
+    emailSender=selectedData.email
+    console.log(emailSender) //hasta aqui funciona
+  }
+
   const sendEmailWithPDF = async () => {
     if (!constructorEmail) {
       Alert.alert("Error", "Please provide the constructor's email address.");
@@ -243,7 +250,7 @@ const ReviewScreen = (props) => {
         <Text style={styles.photoButtonText}>Select Photo</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.photoButton} onPress={sendEmailWithPDF}>
+      <TouchableOpacity style={styles.photoButton} onPress={mandarEmail}>
         <Text style={styles.photoButtonText}>Send Email</Text>
       </TouchableOpacity>
     </ScrollView>

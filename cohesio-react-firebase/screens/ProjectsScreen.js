@@ -7,6 +7,8 @@ import { ListItem, Avatar } from "react-native-elements";
 
 const ProjectsScreen = (props) => {
   const userId = props.route.params.userId; // ID del usuario actual
+  const emailOfUser = props.route.params.email; // Email del usuario actualº
+  console.log(emailOfUser);
   const [projects, setProjects] = useState([]);
 
   useEffect(() => {
@@ -81,7 +83,8 @@ const ProjectsScreen = (props) => {
             bottomDivider
             onPress={() =>
               props.navigation.navigate("ReviewScreen", {
-                projectId: project.id,
+                emailOfUser: emailOfUser, // email para el  correo
+               // projectId: project.id,
                 direction: project.direction,
                 block: project.block,
                 floor: project.floor,
