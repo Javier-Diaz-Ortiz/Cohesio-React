@@ -140,6 +140,27 @@ const ReviewScreen = (props) => {
   }
 
   const sendEmailWithPDF = async () => {
+    try {
+      const timestamp = new Date().toISOString(); // Fecha y hora actual
+      const redRooms = rooms.filter((room) => room.isRed).map((room) => room.name);
+  
+      const dataToSave = {
+        apartment: selectedData.apartment,
+        block: selectedData.block,
+        comment: comment || "No comment provided",
+        direction: selectedData.direction,
+        floor: selectedData.floor,
+        photo: photo ? photo.uri : null,
+        redRooms: redRooms,
+        timestamp: timestamp,
+      };
+  
+      await addDoc(collection(db, "projects"), dataToSave);
+      console.log("Success", "Data saved to Firebase successfully!");
+    } catch (error) {
+      console.error("Error saving to Firebase:", error);
+      console.log("Error", "Failed to save data to Firebase.");
+    }
     if (!constructorEmail) {
       Alert.alert("Error", "Please provide the constructor's email address.");
       return;
@@ -250,7 +271,7 @@ const ReviewScreen = (props) => {
         <Text style={styles.photoButtonText}>Select Photo</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.photoButton} onPress={mandarEmail}>
+      <TouchableOpacity style={styles.photoButton} onPress={sendEmailWithPDF}>
         <Text style={styles.photoButtonText}>Send Email</Text>
       </TouchableOpacity>
     </ScrollView>
