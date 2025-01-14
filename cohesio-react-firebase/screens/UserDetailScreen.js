@@ -143,7 +143,7 @@ const UserDetailScreen = (props) => {
                                 shadowRadius: 5,
                                 elevation: 4, // Sombras en Android
                                 }}
-                                onPress={() => props.navigation.navigate('ProjectsScreen',{  userId: user.id })} // Pasa el ID del usuario a la pantalla de detalles para mostrar el usuario con ese id 
+                                onPress={() => props.navigation.navigate('ProjectsScreen',{  userId: user.id , email: user.email})} // Pasa el ID del usuario a la pantalla de detalles para mostrar el usuario con ese id 
                             >
                                 <Text style={{ color: '#FFF', fontSize: 16, fontWeight: '600' }}>View Projects</Text>
                             </TouchableOpacity>

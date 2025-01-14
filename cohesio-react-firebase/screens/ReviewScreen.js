@@ -20,6 +20,7 @@ import { jsPDF } from "jspdf"; // Para Web
 
 const ReviewScreen = (props) => {
   const [selectedData, setSelectedData] = useState({
+    email : props.route.params.emailOfUser, //EL EMAIL PARA EL CORREO ;EL QUE ENVIAAAAAAAAA
     direction: props.route.params?.direction || "",
     block: props.route.params?.block || "",
     floor: props.route.params?.floor || "",
@@ -132,7 +133,34 @@ const ReviewScreen = (props) => {
     }
   };
 
+  function mandarEmail(){
+    console.log("mandar email")
+    emailSender=selectedData.email
+    console.log(emailSender) //hasta aqui funciona
+  }
+
   const sendEmailWithPDF = async () => {
+    try {
+      const timestamp = new Date().toISOString(); // Fecha y hora actual
+      const redRooms = rooms.filter((room) => room.isRed).map((room) => room.name);
+  
+      const dataToSave = {
+        apartment: selectedData.apartment,
+        block: selectedData.block,
+        comment: comment || "No comment provided",
+        direction: selectedData.direction,
+        floor: selectedData.floor,
+        photo: photo ? photo.uri : null,
+        redRooms: redRooms,
+        timestamp: timestamp,
+      };
+  
+      await addDoc(collection(db, "projects"), dataToSave);
+      console.log("Success", "Data saved to Firebase successfully!");
+    } catch (error) {
+      console.error("Error saving to Firebase:", error);
+      console.log("Error", "Failed to save data to Firebase.");
+    }
     if (!constructorEmail) {
       Alert.alert("Error", "Please provide the constructor's email address.");
       return;

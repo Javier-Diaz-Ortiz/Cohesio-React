@@ -168,12 +168,14 @@ const CohesioMainScreen = (props) => {
       </View>
 
       {/* Botones */}
+      {/*
       <TouchableOpacity
         style={styles.smallButton}
         onPress={() => props.navigation.navigate('CreateUserScreen')}
       >
         <Text style={styles.buttonText}>Create New User</Text>
       </TouchableOpacity>
+      */}
 
       <TouchableOpacity
         style={[styles.smallButton, styles.secondaryButton]}
@@ -187,14 +189,16 @@ const CohesioMainScreen = (props) => {
         style={styles.smallButton}
         onPress={() => props.navigation.navigate('LoginScreen')}
       >
-        <Text style={styles.buttonText}>Login</Text>
+      {/* */}  <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
+      {/* CUANDO TENGAMOS BIEN EL LOGIN Y EL REGISTER lo pongo
       <TouchableOpacity
         style={[styles.smallButton, styles.secondaryButton]}
         onPress={() => props.navigation.navigate('RegisterScreen')}
       >
         <Text style={[styles.buttonText, styles.secondaryButtonText]}>Register</Text>
       </TouchableOpacity>
+      */}
     </View>
   );
 };
