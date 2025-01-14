@@ -1,7 +1,3 @@
-import * as MediaLibrary from 'expo-media-library';
-import * as Print from 'expo-print';
-
-import * as Sharing from "expo-sharing";
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -23,7 +19,6 @@ import db from "../database/firebase"; // Configuración de Firebase
 import { jsPDF } from "jspdf"; // Para Web
 
 const ReviewScreen = (props) => {
-  const projectId = props.route.params.projectId; // ID del usuario actual
   const [selectedData, setSelectedData] = useState({
     direction: props.route.params?.direction || "",
     block: props.route.params?.block || "",
@@ -35,19 +30,6 @@ const ReviewScreen = (props) => {
   const [constructorEmail, setConstructorEmail] = useState("");
   const [comment, setComment] = useState("");
   const [photo, setPhoto] = useState(null);
-
-   //Permissions
-   const checkPermissions = async () => {
-    const { status } = await MediaLibrary.requestPermissionsAsync();
-    if (status !== 'granted') {
-      console.log("You need to grant permission to access media library.");
-    }
-  };
-
-  //Check for permissions
-  useEffect(() => {
-    checkPermissions();
-  }, []);
 
   useEffect(() => {
     generateRooms(selectedData);
@@ -75,51 +57,6 @@ const ReviewScreen = (props) => {
         { id: 2, name: "Living Room", x: 120, y: 10, width: 80, height: 60 },
         { id: 3, name: "Kitchen", x: 10, y: 80, width: 90, height: 70 },
         { id: 4, name: "Bathroom", x: 110, y: 80, width: 90, height: 70 },
-      ], [
-        { id: 1, name: "Living Room", x: 10, y: 10, width: 100, height: 70 },
-        { id: 2, name: "Kitchen", x: 120, y: 10, width: 80, height: 70 },
-        { id: 3, name: "Bedroom 1", x: 10, y: 90, width: 90, height: 60 },
-        { id: 4, name: "Bedroom 2", x: 110, y: 90, width: 100, height: 60 },
-        { id: 5, name: "Bathroom", x: 220, y: 10, width: 80, height: 60 },
-        { id: 6, name: "Storage", x: 220, y: 80, width: 80, height: 60 },
-      ],
-      [
-        { id: 1, name: "Hall", x: 10, y: 10, width: 80, height: 50 },
-        { id: 2, name: "Living Room", x: 10, y: 70, width: 120, height: 80 },
-        { id: 3, name: "Kitchen", x: 140, y: 10, width: 60, height: 50 },
-        { id: 4, name: "Bathroom 1", x: 140, y: 70, width: 60, height: 80 },
-        { id: 5, name: "Bedroom 1", x: 200, y: 10, width: 90, height: 50 },
-        { id: 6, name: "Bedroom 2", x: 200, y: 70, width: 90, height: 80 },
-      ],
-      [
-        { id: 1, name: "Dining Room", x: 10, y: 10, width: 100, height: 60 },
-        { id: 2, name: "Living Room", x: 120, y: 10, width: 120, height: 60 },
-        { id: 3, name: "Kitchen", x: 10, y: 80, width: 90, height: 70 },
-        { id: 4, name: "Bathroom 1", x: 110, y: 80, width: 90, height: 70 },
-        { id: 5, name: "Bathroom 2", x: 210, y: 80, width: 90, height: 70 },
-        { id: 6, name: "Bedroom 1", x: 10, y: 160, width: 90, height: 70 },
-        { id: 7, name: "Bedroom 2", x: 110, y: 160, width: 90, height: 70 },
-      ],
-      [
-        { id: 1, name: "Master Bedroom", x: 10, y: 10, width: 130, height: 70 },
-        { id: 2, name: "Bedroom 1", x: 150, y: 10, width: 100, height: 70 },
-        { id: 3, name: "Bedroom 2", x: 10, y: 90, width: 120, height: 70 },
-        { id: 4, name: "Living Room", x: 140, y: 90, width: 110, height: 70 },
-        { id: 5, name: "Kitchen", x: 10, y: 170, width: 90, height: 60 },
-        { id: 6, name: "Bathroom", x: 110, y: 170, width: 90, height: 60 },
-        { id: 7, name: "Storage", x: 210, y: 170, width: 90, height: 60 },
-      ],
-      [
-        { id: 1, name: "Foyer", x: 10, y: 10, width: 100, height: 50 },
-        { id: 2, name: "Living Room", x: 120, y: 10, width: 180, height: 50 },
-        { id: 3, name: "Dining Room", x: 10, y: 70, width: 100, height: 50 },
-        { id: 4, name: "Kitchen", x: 120, y: 70, width: 80, height: 50 },
-        { id: 5, name: "Bedroom 1", x: 10, y: 130, width: 90, height: 70 },
-        { id: 6, name: "Bedroom 2", x: 110, y: 130, width: 90, height: 70 },
-        { id: 7, name: "Bedroom 3", x: 210, y: 130, width: 90, height: 70 },
-        { id: 8, name: "Bathroom 1", x: 10, y: 210, width: 80, height: 60 },
-        { id: 9, name: "Bathroom 2", x: 100, y: 210, width: 80, height: 60 },
-        { id: 10, name: "Storage", x: 190, y: 210, width: 90, height: 60 },
       ],
     ];
 
@@ -133,25 +70,6 @@ const ReviewScreen = (props) => {
         room.id === id ? { ...room, isRed: !room.isRed } : room
       )
     );
-  };
-
-  const saveToDatabase = async () => {
-    const redRooms = rooms.filter((room) => room.isRed);
-
-    try {
-      await addDoc(collection(db, "projects"), {
-        ...selectedData,
-        redRooms: redRooms.map((room) => room.name),
-        comment: comment || "No comment provided",
-        photo: photo ? photo.uri : null,
-        projectId: projectId,
-        timestamp: new Date(),
-      });
-      Alert.alert("Success", "Project saved successfully!");
-    } catch (error) {
-      console.error("Error saving to Firestore:", error);
-      Alert.alert("Error", "Failed to save project to database.");
-    }
   };
 
   const generatePDF = async () => {
@@ -198,11 +116,14 @@ const ReviewScreen = (props) => {
     } else {
       // Usar react-native-html-to-pdf en Android
       try {
-        const { uri } = await Print.printToFileAsync({ html: htmlContent });
-        if (Platform.OS !== "web" && await Sharing.isAvailableAsync()) {
-          await Sharing.shareAsync(uri);
-        }
-        return uri;
+        const pdf = await RNHTMLtoPDF.convert({
+          html: htmlContent,
+          fileName: "Inspection_Report",
+          directory: "Documents",
+          base64: true,
+        });
+
+        return pdf.filePath;
       } catch (error) {
         console.error("Error generating PDF:", error);
         Alert.alert("Error", "Failed to generate PDF.");
@@ -212,8 +133,8 @@ const ReviewScreen = (props) => {
   };
 
   const sendEmailWithPDF = async () => {
-    if (!constructorEmail || !/\S+@\S+\.\S+/.test(constructorEmail)) {
-      Alert.alert("Error", "Please enter a valid email address.");
+    if (!constructorEmail) {
+      Alert.alert("Error", "Please provide the constructor's email address.");
       return;
     }
 
@@ -221,7 +142,7 @@ const ReviewScreen = (props) => {
     if (!pdfPath) return;
 
     if (Platform.OS === 'web') {
-      window.open(pdfPath); // For web, opens generated PDF.
+      window.open(pdfPath); // Para la web, solo se abre el archivo PDF generado
       Alert.alert("Success", "PDF is ready to be downloaded.");
     } else {
       // Enviar el correo con la aplicación nativa
@@ -305,11 +226,8 @@ const ReviewScreen = (props) => {
         style={styles.input}
         placeholder="Constructor's Email"
         value={constructorEmail}
-        onChangeText={(email) => {
-          setConstructorEmail(email.trim()); 
-        }}
+        onChangeText={setConstructorEmail}
       />
-      
 
       <TextInput
         style={[styles.input, styles.commentInput]}
@@ -325,7 +243,7 @@ const ReviewScreen = (props) => {
         <Text style={styles.photoButtonText}>Select Photo</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.photoButton} onPress={saveToDatabase}> {/* Cambiar a que genere un pdf y mande un email */}
+      <TouchableOpacity style={styles.photoButton} onPress={sendEmailWithPDF}>
         <Text style={styles.photoButtonText}>Send Email</Text>
       </TouchableOpacity>
     </ScrollView>
