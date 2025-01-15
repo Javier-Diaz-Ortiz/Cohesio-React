@@ -1,42 +1,19 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList, TextInput, Alert } from 'react-native';
-import firestore from '@react-native-firebase/firestore'; // Importa Firestore
 
 const UserHomeScreen = ({ navigation }) => {
   const [projects, setProjects] = useState([]); // State to store the projects
   const [newProjectName, setNewProjectName] = useState(''); // State for the name of the new project
 
-  const handleAddProject = async () => {
+  const handleAddProject = () => {
     if (!newProjectName.trim()) {
       Alert.alert('Error', 'Project name cannot be empty.');
       return;
     }
-<<<<<<< HEAD
-
-    // Crear un nuevo proyecto
-    const newProject = { name: newProjectName };
-
-    try {
-      // Guardar el proyecto en Firestore
-      const projectRef = await firestore().collection('projects').add(newProject);
-
-      // Obtener el ID del proyecto recién agregado
-      const projectId = projectRef.id;
-
-      // Actualizar el estado con el nuevo proyecto, incluyendo el ID
-      setProjects([...projects, { id: projectId, name: newProjectName }]);
-
-      // Limpiar el campo de entrada
-      setNewProjectName('');
-    } catch (error) {
-      Alert.alert('Error', 'There was an error creating the project. Please try again.');
-    }
-=======
     // Add the new project
     const newProject = { id: Date.now().toString(), name: newProjectName };
     setProjects([...projects, newProject]);
     setNewProjectName(''); // Clear the input field
->>>>>>> daa4f528f4443d12be8f3dd099d7533b3861f0da
   };
 
   const renderProject = ({ item }) => (
