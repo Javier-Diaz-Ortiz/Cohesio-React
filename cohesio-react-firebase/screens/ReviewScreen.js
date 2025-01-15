@@ -155,7 +155,7 @@ const ReviewScreen = (props) => {
         userId: selectedData.email
       };
   
-      await updateDocDoc(collection(db, "projects"), dataToSave);
+      await updateDoc(collection(db, "projects"), dataToSave);
       console.log("Success", "Data saved to Firebase successfully!");
     } catch (error) {
       console.error("Error saving to Firebase:", error);
