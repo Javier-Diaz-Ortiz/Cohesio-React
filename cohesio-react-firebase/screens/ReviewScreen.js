@@ -11,7 +11,7 @@ import {
   Platform,
 } from "react-native";
 import Svg, { Rect } from "react-native-svg";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc,updateDoc } from "firebase/firestore";
 import RNHTMLtoPDF from "react-native-html-to-pdf";
 import { launchImageLibrary } from "react-native-image-picker";
 import Mailer from "react-native-mail";
@@ -153,9 +153,10 @@ const ReviewScreen = (props) => {
         photo: photo ? photo.uri : null,
         redRooms: redRooms,
         timestamp: timestamp,
+        userId: selectedData.email
       };
   
-      await addDoc(collection(db, "projects"), dataToSave);
+      await updateDocDoc(collection(db, "projects"), dataToSave);
       console.log("Success", "Data saved to Firebase successfully!");
     } catch (error) {
       console.error("Error saving to Firebase:", error);

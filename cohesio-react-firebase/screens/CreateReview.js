@@ -37,12 +37,16 @@ const CreateReview = (props) => {
       try {
         const projectsCollection = collection(db, "projects");
 
-        await addDoc(projectsCollection, {
-          userId: userId, // Include the userId associated with the project
-          direction: state.direction,
-          block: state.block,
-          floor: state.floor,
+        await addDoc(projectsCollection, { //data inicialization
           apartment: state.apartment,
+          block: state.block,
+          comment: null,
+          direction: state.direction,
+          floor: state.floor,
+          photo: null,
+          redRooms: null,
+          timestamp: null,
+          userId: userId, // Include the userId associated with the project
         });
 
         console.log("Project successfully added.");
