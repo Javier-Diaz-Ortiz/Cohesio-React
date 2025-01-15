@@ -15,12 +15,12 @@ import { collection, addDoc } from "firebase/firestore";
 import RNHTMLtoPDF from "react-native-html-to-pdf";
 import { launchImageLibrary } from "react-native-image-picker";
 import Mailer from "react-native-mail";
-import db from "../database/firebase"; // Configuración de Firebase
-import { jsPDF } from "jspdf"; // Para Web
+import db from "../database/firebase"; // Firebase setup.
+import { jsPDF } from "jspdf"; //For Web.
 
 const ReviewScreen = (props) => {
   const [selectedData, setSelectedData] = useState({
-    email : props.route.params.emailOfUser, //EL EMAIL PARA EL CORREO ;EL QUE ENVIAAAAAAAAA
+    email : props.route.params.emailOfUser, //The email for the email sender.
     direction: props.route.params?.direction || "",
     block: props.route.params?.block || "",
     floor: props.route.params?.floor || "",
@@ -113,9 +113,9 @@ const ReviewScreen = (props) => {
       }
 
       const pdfOutput = doc.output("blob");
-      return URL.createObjectURL(pdfOutput); // Esto retorna un enlace al blob de PDF
+      return URL.createObjectURL(pdfOutput); // This returns a link to the PDF blob.
     } else {
-      // Usar react-native-html-to-pdf en Android
+      // Use react-native-html-to-pdf on Android.
       try {
         const pdf = await RNHTMLtoPDF.convert({
           html: htmlContent,
@@ -170,10 +170,10 @@ const ReviewScreen = (props) => {
     if (!pdfPath) return;
 
     if (Platform.OS === 'web') {
-      window.open(pdfPath); // Para la web, solo se abre el archivo PDF generado
+      window.open(pdfPath); // For the web, the generated PDF file just opens.
       Alert.alert("Success", "PDF is ready to be downloaded.");
     } else {
-      // Enviar el correo con la aplicación nativa
+      // Send the email with the native application.
       Mailer.mail(
         {
           subject: "Inspection Report",
@@ -200,7 +200,7 @@ const ReviewScreen = (props) => {
 
   const selectPhoto = () => {
     if (Platform.OS === "web") {
-      // Usar un input de tipo file en la web
+      // Use a file input on the web.
       const input = document.createElement("input");
       input.type = "file";
       input.accept = "image/*";
@@ -216,7 +216,7 @@ const ReviewScreen = (props) => {
       };
       input.click();
     } else {
-      // Usar launchImageLibrary en Android
+      //Use launchImageLibrary on Android.
       launchImageLibrary(
         { mediaType: "photo", selectionLimit: 1 },
         (response) => {
