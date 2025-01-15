@@ -2,24 +2,24 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList, TextInput, Alert } from 'react-native';
 
 const UserHomeScreen = ({ navigation }) => {
-  const [projects, setProjects] = useState([]); // Estado para almacenar los proyectos
-  const [newProjectName, setNewProjectName] = useState(''); // Estado para el nombre del nuevo proyecto
+  const [projects, setProjects] = useState([]); // State to store the projects
+  const [newProjectName, setNewProjectName] = useState(''); // State for the name of the new project
 
   const handleAddProject = () => {
     if (!newProjectName.trim()) {
       Alert.alert('Error', 'Project name cannot be empty.');
       return;
     }
-    // Agregar el nuevo proyecto
+    // Add the new project
     const newProject = { id: Date.now().toString(), name: newProjectName };
     setProjects([...projects, newProject]);
-    setNewProjectName(''); // Limpiar el campo de entrada
+    setNewProjectName(''); // Clear the input field
   };
 
   const renderProject = ({ item }) => (
     <TouchableOpacity
       style={styles.projectItem}
-      onPress={() => navigation.navigate('CreateReview', { projectId: item.id })}
+      onPress={() => navigation.navigate('CreateReview', { userId: item.id })}
     >
       <Text style={styles.projectName}>{item.name}</Text>
     </TouchableOpacity>

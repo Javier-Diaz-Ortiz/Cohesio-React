@@ -13,7 +13,7 @@ import { collection, addDoc } from "firebase/firestore";
 import db from "../database/firebase";
 
 const CreateReview = (props) => {
-  const userId = props.route.params?.userId; // Obtén el userId pasado como prop
+  const userId = props.route.params?.email; // Get the email passed as a prop
 
   const [state, setState] = useState({
     direction: "",
@@ -38,7 +38,7 @@ const CreateReview = (props) => {
         const projectsCollection = collection(db, "projects");
 
         await addDoc(projectsCollection, {
-          userId, // Incluye el userId asociado al proyecto
+          userId: userId, // Include the userId associated with the project
           direction: state.direction,
           block: state.block,
           floor: state.floor,

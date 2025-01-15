@@ -6,7 +6,7 @@ import { doc, getDoc ,deleteDoc, updateDoc} from "firebase/firestore";
 import { ActivityIndicator } from "react-native"; 
 
 const UserDetailScreen = (props) => {
-    console.log(props.route.params.userId) //lo que me esta pasando de la pantalla anterior
+    console.log(props.route.params.userId) 
     
     const initialState ={ 
         id: '',
@@ -19,10 +19,10 @@ const UserDetailScreen = (props) => {
     const [loading , setLoading] = useState(true)
 
     const getUserByid = async(id) => {
-      // Crea una referencia al documento
+      // Create a reference to the document
             const dbRef = doc(db, "users", id);
 
-            // Obtén el documento
+            // Get the document
             const docSnap = await getDoc(dbRef);
 
             if (docSnap.exists()) {
@@ -45,12 +45,12 @@ const UserDetailScreen = (props) => {
         },[])
 
     const handleChangeText = (name, value) => {
-            setUser({...user,[name]:value }) //guarda el state actual y le agrega el nuevo valor a name
+            setUser({...user,[name]:value }) //Save the current state and add the new value to the name
         }
 
         const deleteUser = async () => {
             try {
-              // Obtén el ID del usuario desde props
+              // Get the user ID from props
               const userId = props.route.params.userId;
           
               // Crea una referencia al documento
@@ -67,19 +67,19 @@ const UserDetailScreen = (props) => {
           };
     const updateUser = async () => {
         try {
-            // Obtén el ID del usuario desde props
+            //Get the user ID from props
             const userId = props.route.params.userId;
         
-            // Crea una referencia al documento
+            // Create a reference to the document
             const dbRef = doc(db, "users", userId);
             
             // Define los campos a actualizar
             const updatedData = {
-                name: user.name, // Reemplaza por el nuevo valor de name
-                email: user.email, // Reemplaza por el nuevo valor de email
-                phone: user.phone, // Reemplaza por el nuevo valor de phone
+                name: user.name, // Replace with the new value of name
+                email: user.email, // Replace with the new value of email
+                phone: user.phone, // Replace with the new value of phone 
             };
-            // Elimina el documento
+            // Delete the document
             await updateDoc(dbRef,updatedData);
         
             console.log("Usuario actualizado correctamente");
@@ -87,7 +87,7 @@ const UserDetailScreen = (props) => {
             console.error("Error al actualizar el usuario:", error);
           }
           setUser(initialState)
-          props.navigation.navigate('UsersList') //nuevo
+          props.navigation.navigate('UsersList') //New
         };
 
     if(loading){
@@ -131,7 +131,7 @@ const UserDetailScreen = (props) => {
                     <View style={styles.inputGroup}>
                             <TouchableOpacity
                                 style={{
-                                backgroundColor: '#6A5ACD', // Un color púrpura elegante
+                                backgroundColor: '#6A5ACD', 
                                 paddingVertical: 12,
                                 paddingHorizontal: 20,
                                 borderRadius: 10,
@@ -141,7 +141,7 @@ const UserDetailScreen = (props) => {
                                 shadowOffset: { width: 0, height: 4 },
                                 shadowOpacity: 0.3,
                                 shadowRadius: 5,
-                                elevation: 4, // Sombras en Android
+                                elevation: 4, // Shadows in Android
                                 }}
                                 onPress={() => props.navigation.navigate('ProjectsScreen',{  userId: user.id , email: user.email})} // Pasa el ID del usuario a la pantalla de detalles para mostrar el usuario con ese id 
                             >
