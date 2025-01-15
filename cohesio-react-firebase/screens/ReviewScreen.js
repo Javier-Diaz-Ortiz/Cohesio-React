@@ -13,7 +13,7 @@ import {
   Platform,
 } from "react-native";
 import Svg, { Rect,Text } from "react-native-svg";
-import { collection, addDoc,updateDoc } from "firebase/firestore";
+import { collection, addDoc,updateDoc ,doc} from "firebase/firestore";
 import RNHTMLtoPDF from "react-native-html-to-pdf";
 import { launchImageLibrary } from "react-native-image-picker";
 import Mailer from "react-native-mail";
@@ -21,6 +21,7 @@ import db from "../database/firebase"; // Firebase setup.
 import { jsPDF } from "jspdf"; //For Web.
 
 const ReviewScreen = (props) => {
+  const projectId=props.route.params.projectId
   const [selectedData, setSelectedData] = useState({
     email : props.route.params.emailOfUser, //The email for the email sender.
     direction: props.route.params?.direction || "",
@@ -56,7 +57,7 @@ const ReviewScreen = (props) => {
     const randomFactor =
       (direction.length + block.length + parseInt(floor) + parseInt(apartment)) % 3;
 
-    const predefinedLayouts = [
+    const predefinedLayouts = [ //TODO poner mas porfa y cambiar el randomFactor
       [
         { id: 1, name: "Living Room", x: 10, y: 10, width: 100, height: 70 },
         { id: 2, name: "Kitchen", x: 120, y: 10, width: 80, height: 70 },
@@ -161,19 +162,28 @@ const ReviewScreen = (props) => {
       const timestamp = new Date().toISOString(); // Fecha y hora actual
       const redRooms = rooms.filter((room) => room.isRed).map((room) => room.name);
   
-      const dataToSave = {
-        apartment: selectedData.apartment,
-        block: selectedData.block,
-        comment: comment || "No comment provided",
-        direction: selectedData.direction,
-        floor: selectedData.floor,
-        photo: photo ? photo.uri : null,
-        redRooms: redRooms,
-        timestamp: timestamp,
-        userId: selectedData.email
-      };
-  
-      await updateDocDoc(collection(db, "projects"), dataToSave);
+      // Asegúrate de tener un ID válido para el proyecto
+const idproyecto = projectId; // Reemplaza `projectId` con el ID real del documento
+
+// Referencia al documento específico dentro de la colección "projects"
+const docToUpdate = doc(db, "projects", idproyecto);
+
+// Datos que quieres guardar o actualizar
+const dataToSave = {
+  apartment: selectedData.apartment,
+  block: selectedData.block,
+  comment: comment || "No comment provided",
+  direction: selectedData.direction,
+  floor: selectedData.floor,
+  photo: photo ? photo.uri : null,
+  redRooms: redRooms,
+  timestamp: timestamp,
+  userId: selectedData.email,
+};
+
+// Actualiza el documento
+await updateDoc(docToUpdate, dataToSave);
+
       console.log("Success", "Data saved to Firebase successfully!");
     } catch (error) {
       console.error("Error saving to Firebase:", error);
