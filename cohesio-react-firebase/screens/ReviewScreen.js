@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
   View,
-  Text,
   ScrollView,
   StyleSheet,
   Alert,
@@ -10,7 +9,7 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
-import Svg, { Rect } from "react-native-svg";
+import Svg, { Rect,Text } from "react-native-svg";
 import { collection, addDoc,updateDoc } from "firebase/firestore";
 import RNHTMLtoPDF from "react-native-html-to-pdf";
 import { launchImageLibrary } from "react-native-image-picker";
@@ -236,20 +235,33 @@ const ReviewScreen = (props) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Svg width="300" height="200" style={styles.svgContainer}>
-        {rooms.map((room) => (
-          <Rect
-            key={room.id}
-            x={room.x}
-            y={room.y}
-            width={room.width}
-            height={room.height}
-            fill={room.isRed ? "red" : "lightgray"}
-            stroke="black"
-            strokeWidth="2"
-            onPress={() => toggleRoomColor(room.id)}
-          />
-        ))}
-      </Svg>
+  {rooms.map((room) => (
+    <React.Fragment key={room.id}>
+      <Rect
+        x={room.x}
+        y={room.y}
+        width={room.width}
+        height={room.height}
+        fill={room.isRed ? "red" : "lightgray"}
+        stroke="black"
+        strokeWidth="2"
+        onPress={() => toggleRoomColor(room.id)}
+      />
+      <Text
+        x={room.x + room.width / 2}
+        y={room.y + room.height / 2}
+        textAnchor="middle"
+        alignmentBaseline="middle"
+        fill="black"
+        fontSize="10"
+        fontWeight="bold"
+      >
+        {room.name}
+      </Text>
+    </React.Fragment>
+  ))}
+</Svg>
+
 
       <TextInput
         style={styles.input}
