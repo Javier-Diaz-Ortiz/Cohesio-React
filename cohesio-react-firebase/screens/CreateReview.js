@@ -12,7 +12,7 @@ import { collection, addDoc } from "firebase/firestore";
 import db from "../database/firebase";
 
 const CreateReview = (props) => {
-  const userId = props.route.params?.userId; // Obtén el userId pasado como prop
+  const userId = props.route.params?.email; // Obtén el email pasado como prop
 
   const [state, setState] = useState({
     direction: "",
@@ -37,7 +37,7 @@ const CreateReview = (props) => {
         const projectsCollection = collection(db, "projects");
 
         await addDoc(projectsCollection, {
-          userId, // Incluye el userId asociado al proyecto
+          userId: userId, // Incluye el userId asociado al proyecto
           direction: state.direction,
           block: state.block,
           floor: state.floor,
@@ -45,9 +45,10 @@ const CreateReview = (props) => {
         });
 
         console.log("Proyecto agregado con éxito");
-        props.navigation.navigate("ProjectsScreen", { userId }); // Navega de regreso con el userId
+        props.navigation.navigate("ProjectsScreen", { email: userId }); // Navega de regreso con el email
       } catch (error) {
         console.error("Error al agregar el proyecto:", error);
+        alert("An error occurred while saving the project. Please try again.");
       }
     }
   };

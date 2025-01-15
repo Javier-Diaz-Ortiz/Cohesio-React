@@ -24,7 +24,7 @@ const LoginScreen = ({ navigation }) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       console.log('User logged in:', email);
-      navigation.navigate('UserHomeScreen');
+      navigation.navigate('ProjectsScreen', { email }); // Navegar a la pantalla de inicio del usuario asociando eso al email
     } catch (error) {
       if (error.code === 'auth/user-not-found') {
         setError((prev) => ({ ...prev, general: 'The email address is not registered.' }));

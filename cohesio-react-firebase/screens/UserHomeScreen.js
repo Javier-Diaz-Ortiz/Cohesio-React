@@ -19,7 +19,7 @@ const UserHomeScreen = ({ navigation }) => {
   const renderProject = ({ item }) => (
     <TouchableOpacity
       style={styles.projectItem}
-      onPress={() => navigation.navigate('CreateReview', { projectId: item.id })}
+      onPress={() => navigation.navigate('CreateReview', { userId: item.id })}
     >
       <Text style={styles.projectName}>{item.name}</Text>
     </TouchableOpacity>
