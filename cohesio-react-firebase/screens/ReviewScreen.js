@@ -39,7 +39,7 @@ const ReviewScreen = (props) => {
     const randomFactor =
       (direction.length + block.length + parseInt(floor) + parseInt(apartment)) % 3;
 
-    const predefinedLayouts = [
+    const predefinedLayouts = [ //TODO poner mas porfa y cambiar el randomFactor
       [
         { id: 1, name: "Living Room", x: 10, y: 10, width: 100, height: 70 },
         { id: 2, name: "Kitchen", x: 120, y: 10, width: 80, height: 70 },
