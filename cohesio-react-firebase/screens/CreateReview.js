@@ -51,10 +51,10 @@ const CreateReview = (props) => {
 
         console.log("Project successfully added.");
         // props.navigation.navigate("ProjectsScreen", { userId }); // Navigate back with the userId.
-            // Navigate to the ReviewScreen with necessary data
-      
-      
-       props.navigation.navigate("ReviewScreen", {
+            
+        
+        // Navigate to the ReviewScreen with necessary data
+        props.navigation.navigate("ReviewScreen", {
         emailOfUser: userId,
         direction: state.direction,
         block: state.block,

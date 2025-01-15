@@ -1,3 +1,6 @@
+import * as MediaLibrary from 'expo-media-library';
+import * as Print from 'expo-print';
+import * as Sharing from "expo-sharing";
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -30,6 +33,20 @@ const ReviewScreen = (props) => {
   const [constructorEmail, setConstructorEmail] = useState("");
   const [comment, setComment] = useState("");
   const [photo, setPhoto] = useState(null);
+
+     //Permissions
+     const checkPermissions = async () => {
+      const { status } = await MediaLibrary.requestPermissionsAsync();
+      if (status !== 'granted') {
+        console.log("You need to grant permission to access media library.");
+      }
+    };
+  
+    //Check for permissions
+    useEffect(() => {
+      checkPermissions();
+    }, []);
+  
 
   useEffect(() => {
     generateRooms(selectedData);
@@ -116,14 +133,11 @@ const ReviewScreen = (props) => {
     } else {
       // Use react-native-html-to-pdf on Android.
       try {
-        const pdf = await RNHTMLtoPDF.convert({
-          html: htmlContent,
-          fileName: "Inspection_Report",
-          directory: "Documents",
-          base64: true,
-        });
-
-        return pdf.filePath;
+        const { uri } = await Print.printToFileAsync({ html: htmlContent });
+        if (Platform.OS !== "web" && await Sharing.isAvailableAsync()) {
+          await Sharing.shareAsync(uri);
+        }
+        return uri;
       } catch (error) {
         console.error("Error generating PDF:", error);
         Alert.alert("Error", "Failed to generate PDF.");
@@ -139,6 +153,10 @@ const ReviewScreen = (props) => {
   }
 
   const sendEmailWithPDF = async () => {
+    if (!constructorEmail || !/\S+@\S+\.\S+/.test(constructorEmail)) {
+      Alert.alert("Error", "Please enter a valid email address.");
+      return; 
+    }
     try {
       const timestamp = new Date().toISOString(); // Fecha y hora actual
       const redRooms = rooms.filter((room) => room.isRed).map((room) => room.name);
@@ -235,32 +253,32 @@ const ReviewScreen = (props) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Svg width="300" height="200" style={styles.svgContainer}>
-  {rooms.map((room) => (
-    <React.Fragment key={room.id}>
-      <Rect
-        x={room.x}
-        y={room.y}
-        width={room.width}
-        height={room.height}
-        fill={room.isRed ? "red" : "lightgray"}
-        stroke="black"
-        strokeWidth="2"
-        onPress={() => toggleRoomColor(room.id)}
-      />
-      <Text
-        x={room.x + room.width / 2}
-        y={room.y + room.height / 2}
-        textAnchor="middle"
-        alignmentBaseline="middle"
-        fill="black"
-        fontSize="10"
-        fontWeight="bold"
-      >
-        {room.name}
-      </Text>
-    </React.Fragment>
-  ))}
-</Svg>
+        {rooms.map((room) => (
+          <React.Fragment key={room.id}>
+            <Rect
+              x={room.x}
+              y={room.y}
+              width={room.width}
+              height={room.height}
+              fill={room.isRed ? "red" : "lightgray"}
+              stroke="black"
+              strokeWidth="2"
+              onPress={() => toggleRoomColor(room.id)}
+            />
+            <Text
+              x={room.x + room.width / 2}
+              y={room.y + room.height / 2}
+              textAnchor="middle"
+              alignmentBaseline="middle"
+              fill="black"
+              fontSize="10"
+              fontWeight="bold"
+            >
+              {room.name}
+            </Text>
+          </React.Fragment>
+        ))}
+      </Svg>
 
 
       <TextInput
