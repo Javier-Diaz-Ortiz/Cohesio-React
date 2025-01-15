@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Modal,
   TouchableOpacity,
+  TextInput,
 } from "react-native";
 import { collection, addDoc } from "firebase/firestore";
 import db from "../database/firebase";
@@ -44,10 +45,10 @@ const CreateReview = (props) => {
           apartment: state.apartment,
         });
 
-        console.log("Proyecto agregado con éxito");
-        props.navigation.navigate("ProjectsScreen", { userId }); // Navega de regreso con el userId
+        console.log("Project successfully added.");
+        props.navigation.navigate("ProjectsScreen", { userId }); // Navigate back with the userId.
       } catch (error) {
-        console.error("Error al agregar el proyecto:", error);
+        console.error("Error adding the project:", error);
       }
     }
   };
@@ -61,7 +62,7 @@ const CreateReview = (props) => {
 
   return (
     <ScrollView style={styles.container}>
-      {["direction", "block", "floor", "apartment"].map((field, index) => (
+      {["direction", "block"].map((field, index) => (
         <View style={styles.inputGroup} key={index}>
           <Text style={styles.label}>
             {field.charAt(0).toUpperCase() + field.slice(1)}
@@ -79,6 +80,30 @@ const CreateReview = (props) => {
           </TouchableOpacity>
         </View>
       ))}
+
+      {/*Only for Floor */}
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Floor</Text>
+        <TextInput
+          style={styles.textInput}
+          placeholder="Enter floor"
+          keyboardType="numeric"
+          value={state.floor}
+          onChangeText={(value) => setState({ ...state, floor: value })}
+        />
+      </View>
+
+      {/* Only for Apartment */}
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Apartment</Text>
+        <TextInput
+          style={styles.textInput}
+          placeholder="Enter apartment"
+          keyboardType="numeric"
+          value={state.apartment}
+          onChangeText={(value) => setState({ ...state, apartment: value })}
+        />
+      </View>
 
       <View style={styles.inputGroup}>
         <Button title="Save Project" onPress={() => saveNewProject()} />
@@ -163,6 +188,12 @@ const styles = StyleSheet.create({
     borderBottomColor: "#ccc",
   },
   optionText: {
+    fontSize: 16,
+  },
+  textInput: {
+    backgroundColor: "#e0e0e0",
+    padding: 10,
+    borderRadius: 5,
     fontSize: 16,
   },
 });
