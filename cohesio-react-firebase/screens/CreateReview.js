@@ -38,11 +38,11 @@ const CreateReview = (props) => {
         const projectsCollection = collection(db, "projects");
 
         await addDoc(projectsCollection, { //data inicialization
-          apartment: state.apartment,
+          apartment: state.apartment, //ESTE ES EL ERROR
           block: state.block,
           comment: null,
           direction: state.direction,
-          floor: state.floor,
+          floor: state.floor, //ESTE ES EL ERROR
           photo: null,
           redRooms: null,
           timestamp: null,
