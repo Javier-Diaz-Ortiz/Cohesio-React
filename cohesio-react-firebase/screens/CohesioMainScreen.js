@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native';
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const PARTICLE_COUNT = 30; // Reducido para mejorar rendimiento
 const TITLE_PARTICLE_COUNT = 5;
 
@@ -11,8 +10,18 @@ const CohesioMainScreen = (props) => {
   const titleParticles = useRef([]);
   const oPositions = useRef([]);
   const [isLoaded, setIsLoaded] = useState(false); // Estado para forzar una actualización
+  const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width); // Para ajustar el ancho
+  const [screenHeight, setScreenHeight] = useState(Dimensions.get('window').height); // Para ajustar la altura
 
   useEffect(() => {
+    // Escuchar cambios en las dimensiones de la ventana
+    const onChange = ({ window }) => {
+      setScreenWidth(window.width);
+      setScreenHeight(window.height);
+    };
+
+    Dimensions.addEventListener('change', onChange);
+
     // Animación del fondo
     Animated.loop(
       Animated.timing(gradientAnimation, {
@@ -28,6 +37,11 @@ const CohesioMainScreen = (props) => {
 
     // Forzar actualización tras montar
     setIsLoaded(true);
+
+    // Limpiar listener cuando el componente se desmonte
+    return () => {
+      Dimensions.removeEventListener('change', onChange);
+    };
   }, []);
 
   useEffect(() => {
@@ -168,15 +182,6 @@ const CohesioMainScreen = (props) => {
       </View>
 
       {/* Botones */}
-      {/*
-      <TouchableOpacity
-        style={styles.smallButton}
-        onPress={() => props.navigation.navigate('CreateUserScreen')}
-      >
-        <Text style={styles.buttonText}>Create New User</Text>
-      </TouchableOpacity>
-      */}
-
       <TouchableOpacity
         style={[styles.smallButton, styles.secondaryButton]}
         onPress={() => props.navigation.navigate('LoginScreen')}
@@ -189,7 +194,7 @@ const CohesioMainScreen = (props) => {
         style={styles.smallButton}
         onPress={() => props.navigation.navigate('RegisterScreen')}
       >
-      {/* */}  <Text style={styles.buttonText}>Register</Text>
+        <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
     </View>
   );
@@ -210,7 +215,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     alignItems: 'center',
     justifyContent: 'center',
-    width: screenWidth * 0.6,
+    width: '60%', // Cambiado de screenWidth * 0.6 a un porcentaje
   },
   secondaryButton: { backgroundColor: '#7B4397' },
   secondaryButtonText: { color: '#FFFFFF' },
