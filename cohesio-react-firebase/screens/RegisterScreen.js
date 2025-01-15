@@ -64,9 +64,7 @@ const RegisterScreen = ({ navigation }) => {
         setErrorMessages({ email: 'The email address is invalid.' });
       } else if (error.code === 'auth/weak-password') {
         setErrorMessages({ password: 'Password should be at least 6 characters.' });
-      } else {
-        alert('An error occurred:', error.message);
-      }
+      } 
     }
   };
 
