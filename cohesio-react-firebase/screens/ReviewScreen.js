@@ -57,7 +57,7 @@ const ReviewScreen = (props) => {
     const randomFactor =
       (direction.length + block.length + parseInt(floor) + parseInt(apartment)) % 3;
 
-    const predefinedLayouts = [ //TODO poner mas porfa y cambiar el randomFactor
+    const predefinedLayouts = [ //TODO Put more please and change the randomFactor
       [
         { id: 1, name: "Living Room", x: 10, y: 10, width: 100, height: 70 },
         { id: 2, name: "Kitchen", x: 120, y: 10, width: 80, height: 70 },
@@ -109,7 +109,7 @@ const ReviewScreen = (props) => {
     `;
 
     if (Platform.OS === 'web') {
-      // Usar jsPDF en la web
+      //Use jsPDF on the web.
       const doc = new jsPDF();
       doc.setFontSize(18);
       doc.text("Apartment Inspection Report", 10, 10);
@@ -150,7 +150,7 @@ const ReviewScreen = (props) => {
   function mandarEmail(){
     console.log("mandar email")
     emailSender=selectedData.email
-    console.log(emailSender) //hasta aqui funciona
+    console.log(emailSender) //Up to here, it works.
   }
 
   const sendEmailWithPDF = async () => {
@@ -165,10 +165,10 @@ const ReviewScreen = (props) => {
       // Asegúrate de tener un ID válido para el proyecto
 const idproyecto = projectId; // Reemplaza `projectId` con el ID real del documento
 
-// Referencia al documento específico dentro de la colección "projects"
+// Reference to the specific document within the "projects" collection
 const docToUpdate = doc(db, "projects", idproyecto);
 
-// Datos que quieres guardar o actualizar
+// Data you want to save or update
 const dataToSave = {
   apartment: selectedData.apartment,
   block: selectedData.block,
@@ -181,7 +181,7 @@ const dataToSave = {
   userId: selectedData.email,
 };
 
-// Actualiza el documento
+//Update the document.
 await updateDoc(docToUpdate, dataToSave);
 
       console.log("Success", "Data saved to Firebase successfully!");
