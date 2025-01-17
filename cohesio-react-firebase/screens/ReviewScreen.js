@@ -99,46 +99,251 @@ const ReviewScreen = (props) => {
 
   const generatePDF = async () => {
     const redRooms = rooms.filter((room) => room.isRed);
-    const photoHTML = photo ? `<img src='${photo.uri}' alt='Attached photo' width='300'/>` : "";
+    const photoHTML = photo
+      ? `<img src='${photo.uri}' alt='Attached photo' style='width:100%; max-width:400px; border:3px solid #0056b3; border-radius:12px; margin:20px 0;'/>`
+      : "";
+    
     const htmlContent = `
-      <h1>Apartment Inspection Report</h1>
-      <p><strong>Direction:</strong> ${selectedData.direction}</p>
-      <p><strong>Block:</strong> ${selectedData.block}</p>
-      <p><strong>Floor:</strong> ${selectedData.floor}</p>
-      <p><strong>Apartment:</strong> ${selectedData.apartment}</p>
-      <h2>Marked Rooms:</h2>
-      <ul>
-        ${redRooms.map((room) => `<li>${room.name}</li>`).join("")}
-      </ul>
-      <h2>Comment:</h2>
-      <p>${comment || "No comment provided."}</p>
-      ${photoHTML}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Apartment Inspection Report</title>
+      <style>
+        body {
+          font-family: 'Helvetica Neue', 'Arial', sans-serif;
+          background: linear-gradient(120deg, #f4f4f9, #e6ebf5);
+          margin: 0;
+          padding: 0;
+          color: #333;
+        }
+        .container {
+          max-width: 900px;
+          margin: 40px auto;
+          background: #fff;
+          border-radius: 16px;
+          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+          overflow: hidden;
+        }
+        header {
+          background-color: #0056b3;
+          color: white;
+          padding: 20px 40px;
+          text-align: center;
+        }
+        header h1 {
+          font-size: 2.4em;
+          margin: 0;
+        }
+        header p {
+          font-size: 1em;
+          margin-top: 10px;
+        }
+        .content {
+          padding: 20px 40px;
+        }
+        .details {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 20px;
+          background: #f9f9f9;
+          padding: 20px;
+          border-radius: 12px;
+          margin-bottom: 20px;
+        }
+        .details p {
+          margin: 0;
+          font-size: 1em;
+        }
+        .details p strong {
+          color: #0056b3;
+        }
+        h2 {
+          color: #0056b3;
+          border-bottom: 2px solid #0056b3;
+          padding-bottom: 5px;
+          margin-bottom: 15px;
+        }
+        ul {
+          list-style: none;
+          padding-left: 0;
+        }
+        ul li {
+          padding: 10px;
+          margin-bottom: 5px;
+          background: #e6ebf5;
+          border-radius: 8px;
+        }
+        ul li:hover {
+          background: #d1d9e6;
+        }
+        .photo-section {
+          text-align: center;
+          margin-top: 20px;
+        }
+        .photo-section img {
+          transition: transform 0.3s ease;
+        }
+        .photo-section img:hover {
+          transform: scale(1.05);
+        }
+        footer {
+          background: #0056b3;
+          color: white;
+          text-align: center;
+          padding: 10px;
+          margin-top: 20px;
+        }
+        footer p {
+          margin: 0;
+          font-size: 0.9em;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <header>
+          <h1>Apartment Inspection Report</h1>
+          <p>Comprehensive and detailed assessment</p>
+        </header>
+        <div class="content">
+          <div class="details">
+            <p><strong>Direction:</strong> ${selectedData.direction}</p>
+            <p><strong>Block:</strong> ${selectedData.block}</p>
+            <p><strong>Floor:</strong> ${selectedData.floor}</p>
+            <p><strong>Apartment:</strong> ${selectedData.apartment}</p>
+          </div>
+          <h2>Marked Rooms</h2>
+          <ul>
+            ${redRooms.length > 0 
+              ? redRooms.map((room) => `<li>${room.name}</li>`).join("") 
+              : "<li>No marked rooms.</li>"
+            }
+          </ul>
+          <h2>Comment</h2>
+          <p>${comment || "No comment provided."}</p>
+          <div class="photo-section">
+            ${photoHTML}
+          </div>
+        </div>
+        <footer>
+          <p>© 2025 Cohesio. All rights reserved.</p>
+        </footer>
+      </div>
+    </body>
+    </html>
     `;
+    
+
 
     if (Platform.OS === 'web') {
-      //Use jsPDF on the web.
+      // Importar jsPDF y preparar la generación del PDF
+      const { jsPDF } = require('jspdf');
       const doc = new jsPDF();
-      doc.setFontSize(18);
-      doc.text("Apartment Inspection Report", 10, 10);
+    
+   // Título principal con un estilo más llamativo
+doc.setFontSize(24);
+doc.setFont("helvetica", "bold");
+doc.setTextColor(0, 102, 204); // Color azul
+doc.text("Apartment Inspection Report", 105, 20, { align: "center" }); // Centrado en la página
 
-      doc.setFontSize(12);
-      doc.text(`Direction: ${selectedData.direction}`, 10, 20);
-      doc.text(`Block: ${selectedData.block}`, 10, 30);
-      doc.text(`Floor: ${selectedData.floor}`, 10, 40);
-      doc.text(`Apartment: ${selectedData.apartment}`, 10, 50);
-      doc.text("Marked Rooms:", 10, 60);
-      redRooms.forEach((room, index) => {
-        doc.text(`${index + 1}. ${room.name}`, 10, 70 + index * 10);
-      });
-      doc.text(`Comment: ${comment || "No comment provided."}`, 10, 90);
+// Línea separadora debajo del título
+doc.setDrawColor(0, 102, 204); // Azul
+doc.setLineWidth(1);
+doc.line(10, 25, 200, 25);
 
+// Datos principales del reporte en una sección estructurada
+doc.setFontSize(14);
+doc.setFont("helvetica", "bold");
+doc.setTextColor(0, 0, 0); // Negro
+doc.text("Property Details:", 10, 40); // Más espacio debajo del título
+
+// Formato atractivo para los datos principales
+doc.setFontSize(12);
+doc.setFont("helvetica", "normal");
+doc.text(`Direction: ${selectedData.direction}`, 15, 50);
+doc.text(`Block: ${selectedData.block}`, 15, 60);
+doc.text(`Floor: ${selectedData.floor}`, 15, 70);
+doc.text(`Apartment: ${selectedData.apartment}`, 15, 80);
+
+// Línea separadora para marcar inicio de otra sección
+doc.setDrawColor(150); // Gris
+doc.line(10, 90, 200, 90);
+
+// Lista de habitaciones marcadas con mayor separación
+doc.setFontSize(14);
+doc.setFont("helvetica", "bold");
+doc.setTextColor(0, 0, 0);
+doc.text("Marked Rooms:", 10, 110); // Mucho más espacio debajo del título
+
+// Agregar un recuadro o viñetas para las habitaciones marcadas
+doc.setFontSize(12);
+doc.setFont("helvetica", "normal");
+redRooms.forEach((room, index) => {
+  doc.setDrawColor(0); // Negro
+  doc.rect(10, 120 + index * 20 - 6, 190, 10); // Más espacio entre recuadros
+  doc.text(`${index + 1}. ${room.name}`, 15, 120 + index * 20);
+});
+
+// Línea separadora para comentarios
+doc.line(10, 130 + redRooms.length * 20 + 5, 200, 130 + redRooms.length * 20 + 5);
+
+// Comentarios con formato atractivo
+doc.setFontSize(14);
+doc.setFont("helvetica", "bold");
+doc.setTextColor(0, 0, 0);
+doc.text("Comment:", 10, 150 + redRooms.length * 20); // Más espacio debajo del título
+
+// Comentario en un recuadro
+doc.setFontSize(12);
+doc.setFont("helvetica", "normal");
+doc.setTextColor(80, 80, 80); // Gris oscuro
+doc.text(
+  comment || "No comment provided.",
+  15,
+  160 + redRooms.length * 20,
+  { maxWidth: 180 } // Ajustar texto largo al ancho del recuadro
+);
+doc.setDrawColor(0);
+doc.rect(10, 155 + redRooms.length * 20 - 5, 190, 20); // Recuadro para el comentario
+
+// Pie de página con un diseño profesional
+doc.setFontSize(10);
+doc.setFont("helvetica", "italic");
+doc.setTextColor(120); // Gris
+doc.text("Generated with Apartment Inspection Report System © 2025", 105, 290, {
+  align: "center",
+});
+
+
+
+      // Agregar imagen si está disponible
       if (photo) {
-        doc.addImage(photo.uri, "JPEG", 10, 100, 180, 160);
+        // Añadir imagen al PDF (escalada para encajar en la página)
+        doc.addImage(photo.uri, "JPEG", 10, 100 + redRooms.length * 10, 180, 120);
       }
+    
+      // Descargar automáticamente el archivo PDF
+      doc.save('Apartment_Inspection_Report.pdf'); // Descarga el archivo con este nombre
+    
+      // Crear un enlace "mailto" para abrir el cliente de correo
+      const email = "recipient@example.com"; // Cambiar por el correo del destinatario
+      const subject = encodeURIComponent("Apartment Inspection Report");
+      const body = encodeURIComponent(
+        "Attached is the apartment inspection report. Please review the details."
+      );
+    
+      // Redirigir al cliente de correo
+      const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
+      const a = document.createElement("a");
+      a.href = mailtoLink;
+      a.target = "_blank";
+      a.click();
+    }
+    
 
-      const pdfOutput = doc.output("blob");
-      return URL.createObjectURL(pdfOutput); // This returns a link to the PDF blob.
-    } else {
+        else {
       // Use react-native-html-to-pdf on Android.
       try {
         const { uri } = await Print.printToFileAsync({ html: htmlContent });
