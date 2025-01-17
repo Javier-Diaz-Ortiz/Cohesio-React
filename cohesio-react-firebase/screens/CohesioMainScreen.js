@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native';
 
-const PARTICLE_COUNT = 30; // Reducido para mejorar rendimiento
+const PARTICLE_COUNT = 30; //Reduced for better performance
 const TITLE_PARTICLE_COUNT = 5;
 
 const CohesioMainScreen = (props) => {
@@ -9,12 +9,12 @@ const CohesioMainScreen = (props) => {
   const particles = useRef([]);
   const titleParticles = useRef([]);
   const oPositions = useRef([]);
-  const [isLoaded, setIsLoaded] = useState(false); // Estado para forzar una actualización
-  const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width); // Para ajustar el ancho
-  const [screenHeight, setScreenHeight] = useState(Dimensions.get('window').height); // Para ajustar la altura
+  const [isLoaded, setIsLoaded] = useState(false); //State to force an update
+  const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width); // To adjust the width
+  const [screenHeight, setScreenHeight] = useState(Dimensions.get('window').height); //To adjust the height
 
   useEffect(() => {
-    // Escuchar cambios en las dimensiones de la ventana
+    // Listener for changes in window dimensions
     const onChange = ({ window }) => {
       setScreenWidth(window.width);
       setScreenHeight(window.height);
@@ -22,23 +22,23 @@ const CohesioMainScreen = (props) => {
 
     Dimensions.addEventListener('change', onChange);
 
-    // Animación del fondo
+    //Background animation
     Animated.loop(
       Animated.timing(gradientAnimation, {
         toValue: 1,
-        duration: 20000, // Animación más lenta para menos actualizaciones
+        duration: 20000, 
         useNativeDriver: false,
       })
     ).start();
 
-    // Inicializar partículas
+    //Initialize particles
     initializeParticles(particles, PARTICLE_COUNT, false);
     initializeParticles(titleParticles, TITLE_PARTICLE_COUNT, true);
 
-    // Forzar actualización tras montar
+    // Force update after mounting
     setIsLoaded(true);
 
-    // Limpiar listener cuando el componente se desmonte
+    // Clean up the listener when the component unmounts
     return () => {
       Dimensions.removeEventListener('change', onChange);
     };
@@ -46,7 +46,7 @@ const CohesioMainScreen = (props) => {
 
   useEffect(() => {
     if (isLoaded) {
-      // Animar partículas después de la actualización
+      // Animate particles after the update
       particles.current.forEach((particle) => animateParticle(particle));
       titleParticles.current.forEach((particle) => animateParticle(particle, true));
     }
@@ -56,9 +56,9 @@ const CohesioMainScreen = (props) => {
     const particleArray = Array.from({ length: count }, () => ({
       x: new Animated.Value(Math.random() * screenWidth),
       y: new Animated.Value(isTitle ? -50 : Math.random() * screenHeight),
-      size: Math.random() * 10 + 5, // Tamaño más grande para mayor visibilidad
+      size: Math.random() * 10 + 5, // Larger size for better visibility
       opacity: new Animated.Value(1),
-      duration: Math.random() * 8000 + 5000, // Animación más larga
+      duration: Math.random() * 8000 + 5000, // Longer animation
     }));
     particleRef.current = particleArray;
   };
@@ -81,7 +81,7 @@ const CohesioMainScreen = (props) => {
         useNativeDriver: true,
       }),
       Animated.timing(particle.opacity, {
-        toValue: Math.random() * 0.5 + 0.5, // Opacidad entre 0.5 y 1
+        toValue: Math.random() * 0.5 + 0.5, // Opacity between 0.5 and 1
         duration: particle.duration,
         useNativeDriver: true,
       }),
@@ -117,7 +117,7 @@ const CohesioMainScreen = (props) => {
 
   return (
     <View style={styles.container}>
-      {/* Fondo dinámico con degradado continuo */}
+      {/* Dynamic background with continuous gradient */}
       <Animated.View
         style={[
           styles.background,
@@ -127,7 +127,7 @@ const CohesioMainScreen = (props) => {
         ]}
       />
 
-      {/* Partículas de fondo */}
+      {/* Background particles */}
       {particles.current.map((particle, index) => (
         <Animated.View
           key={`particle-${index}`}
@@ -144,7 +144,7 @@ const CohesioMainScreen = (props) => {
         />
       ))}
 
-      {/* Partículas del título */}
+      {/* Title particles */}
       {titleParticles.current.map((particle, index) => (
         <Animated.View
           key={`title-particle-${index}`}
@@ -161,7 +161,7 @@ const CohesioMainScreen = (props) => {
         />
       ))}
 
-      {/* Título */}
+      {/* Title */}
       <View style={styles.titleContainer}>
         <Text style={styles.title}>
           C
@@ -181,7 +181,7 @@ const CohesioMainScreen = (props) => {
         </Text>
       </View>
 
-      {/* Botones */}
+      {/* Buttons */}
       <TouchableOpacity
         style={[styles.smallButton, styles.secondaryButton]}
         onPress={() => props.navigation.navigate('LoginScreen')}
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '60%', // Cambiado de screenWidth * 0.6 a un porcentaje
+    width: '60%', // Changed from screenWidth * 0.6 to a percentage.
   },
   secondaryButton: { backgroundColor: '#7B4397' },
   secondaryButtonText: { color: '#FFFFFF' },
