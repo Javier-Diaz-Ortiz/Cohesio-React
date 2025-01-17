@@ -36,32 +36,32 @@ const CreateReview = (props) => {
     } else {
       try {
         const projectsCollection = collection(db, "projects");
-
-        await addDoc(projectsCollection, { //data inicialization
-          apartment: state.apartment, //ESTE ES EL ERROR
+        
+        // Agregar el documento y obtener su referencia
+        const newDocRef = await addDoc(projectsCollection, {
+          apartment: state.apartment,
           block: state.block,
           comment: null,
           direction: state.direction,
-          floor: state.floor, //ESTE ES EL ERROR
+          floor: state.floor,
           photo: null,
           redRooms: null,
           timestamp: null,
-          userId: userId, // Include the userId associated with the project
+          userId: userId,
         });
-
-        console.log("Project successfully added." + projectsCollection.id);
-        // props.navigation.navigate("ProjectsScreen", { userId }); // Navigate back with the userId.
-            // Navigate to the ReviewScreen with necessary data
-      
-      
-       props.navigation.navigate("ReviewScreen", {
-        projectId: projectsCollection.id, //it passed it to the next screen
-        emailOfUser: userId,
-        direction: state.direction,
-        block: state.block,
-        floor: state.floor,
-        apartment: state.apartment,
-      });
+        console.log("New Project ID:", newDocRef.id);
+        console.log("Project successfully added.", newDocRef.id);
+  
+        // Navegar con el ID del documento recién creado
+        props.navigation.navigate("ReviewScreen", {
+          projectId: newDocRef.id, // ID correcto del documento
+          emailOfUser: userId,
+          direction: state.direction,
+          block: state.block,
+          floor: state.floor,
+          apartment: state.apartment,
+        });
+        
       } catch (error) {
         console.error("Error adding the project:", error);
       }

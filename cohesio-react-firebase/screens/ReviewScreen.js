@@ -18,7 +18,14 @@ import db from "../database/firebase"; // Firebase setup.
 import { jsPDF } from "jspdf"; //For Web.
 
 const ReviewScreen = (props) => {
-  const projectId=props.route.params.projectId
+  console.log("Route Params:", props.route.params);
+  const projectId = props.route.params?.projectId;
+
+  if (!projectId) {
+    console.error("Project ID is missing in route params.");
+    Alert.alert("Error", "Project ID is missing.");
+    return null;
+  }
   const [selectedData, setSelectedData] = useState({
     email : props.route.params.emailOfUser, //The email for the email sender.
     direction: props.route.params?.direction || "",
@@ -141,30 +148,24 @@ const ReviewScreen = (props) => {
 
   const sendEmailWithPDF = async () => {
     try {
-      const timestamp = new Date().toISOString(); // Fecha y hora actual
+      const timestamp = new Date().toISOString();
       const redRooms = rooms.filter((room) => room.isRed).map((room) => room.name);
-  
-      // Asegúrate de tener un ID válido para el proyecto
-const idproyecto = projectId; // Reemplaza `projectId` con el ID real del documento
 
-// Referencia al documento específico dentro de la colección "projects"
-const docToUpdate = doc(db, "projects", idproyecto);
+      const docToUpdate = doc(db, "projects", projectId);
 
-// Datos que quieres guardar o actualizar
-const dataToSave = {
-  apartment: selectedData.apartment,
-  block: selectedData.block,
-  comment: comment || "No comment provided",
-  direction: selectedData.direction,
-  floor: selectedData.floor,
-  photo: photo ? photo.uri : null,
-  redRooms: redRooms,
-  timestamp: timestamp,
-  userId: selectedData.email,
-};
+      const dataToSave = {
+        apartment: selectedData.apartment,
+        block: selectedData.block,
+        comment: comment || "No comment provided",
+        direction: selectedData.direction,
+        floor: selectedData.floor,
+        photo: photo ? photo.uri : null,
+        redRooms: redRooms,
+        timestamp: timestamp,
+        userId: selectedData.email,
+      };
 
-// Actualiza el documento
-await updateDoc(docToUpdate, dataToSave);
+      await updateDoc(docToUpdate, dataToSave);
 
       console.log("Success", "Data saved to Firebase successfully!");
     } catch (error) {

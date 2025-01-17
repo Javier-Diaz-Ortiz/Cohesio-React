@@ -87,7 +87,7 @@ const ProjectsScreen = (props) => {
           bottomDivider
           onPress={() =>
             props.navigation.navigate("ReviewScreen", {
-
+              projectId: project.id,
               email, // Pass the user's email.
               direction: project.direction,
               block: project.block,
