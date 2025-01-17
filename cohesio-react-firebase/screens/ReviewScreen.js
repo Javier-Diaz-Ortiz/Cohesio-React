@@ -502,7 +502,12 @@ if (photo) {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView 
+    contentContainerStyle={styles.container}
+    keyboardShouldPersistTaps="handled"  // Επιτρέπει την αλληλεπίδραση με το πληκτρολόγιο και το scroll
+    scrollEventThrottle={16}  // Αυξάνει την απόκριση του scroll
+    showsVerticalScrollIndicator={true}  // Εμφανίζει το scroll indicator
+    >
       <Svg width="300" height="200" style={styles.svgContainer}>
         {rooms.map((room) => (
           <React.Fragment key={room.id}>
@@ -539,7 +544,11 @@ if (photo) {
         multiline
       />
 
-      {photo && <Image source={{ uri: photo.uri }} style={styles.photo} />}
+      {photo && (
+        <View style={styles.photoContainer}>
+          <Image source={{ uri: photo.uri }} style={styles.photo} />
+        </View>
+      )}
 
       <TouchableOpacity style={styles.photoButton} onPress={selectPhoto}>
         <Text style={styles.photoButtonText}>Select Photo</Text>
@@ -554,8 +563,10 @@ if (photo) {
 
 const styles = StyleSheet.create({
   container: {
+    flexGrow: 1,
     padding: 20,
     alignItems: "center",
+    justifyContent: "flex-start",
   },
   svgContainer: {
     marginVertical: 20,
@@ -573,9 +584,9 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
   },
   photo: {
-    width: 300,
-    height: 200,
-    marginVertical: 15,
+    width: "100%",
+    height: "100%", 
+    resizeMode: "contain",
   },
   photoButton: {
     backgroundColor: "#007bff",
@@ -587,6 +598,14 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     textAlign: "center",
+  },
+  photoContainer: {
+    width: "100%",
+    height: 300,  
+    overflow: "hidden", 
+    marginVertical: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
