@@ -11,6 +11,7 @@ import {
   Image,
   TouchableOpacity,
   Platform,
+  Text as Textilia
 } from "react-native";
 import Svg, { Rect,Text } from "react-native-svg";
 import { collection, addDoc,updateDoc ,doc} from "firebase/firestore";
@@ -551,11 +552,15 @@ if (photo) {
       )}
 
       <TouchableOpacity style={styles.photoButton} onPress={selectPhoto}>
-        <Text style={styles.photoButtonText}>Select Photo</Text>
+      <View>
+        <Textilia style={styles.photoButtonText}>Select Photo</Textilia>
+        </View>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.photoButton} onPress={sendEmailWithPDF}>
-        <Text style={styles.photoButtonText}>Share</Text>
+        <View>
+        <Textilia style={styles.photoButtonText}>Share</Textilia  >
+        </View>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -589,18 +594,18 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   photoButton: {
-    backgroundColor: "#007bff",
+    backgroundColor: '#6c8c72', // Verde apagado
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 50,
     marginBottom: 15,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '60%', 
+    width: '60%',
   },
   photoButtonText: {
-    color: "#FFFFFF",
-    fontSize: 16, 
+    color: '#FFFFFF',
+    fontSize: 16,
     fontWeight: 'bold',
   },
   photoContainer: {
