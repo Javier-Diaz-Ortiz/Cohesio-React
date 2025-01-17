@@ -190,10 +190,6 @@ const ReviewScreen = (props) => {
       console.error("Error saving to Firebase:", error);
       console.log("Error", "Failed to save data to Firebase.");
     }
-    if (!constructorEmail) {
-      Alert.alert("Error", "Please provide the constructor's email address.");
-      return;
-    }
 
     const pdfPath = await generatePDF();
     if (!pdfPath) return;
