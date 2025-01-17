@@ -515,7 +515,7 @@ doc.text("Generated with Apartment Inspection Report System © 2025", 105, 290, 
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.photoButton} onPress={sendEmailWithPDF}>
-        <Text style={styles.photoButtonText}>Send Email</Text>
+        <Text style={styles.photoButtonText}>Share</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -550,14 +550,18 @@ const styles = StyleSheet.create({
   },
   photoButton: {
     backgroundColor: "#007bff",
-    padding: 10,
-    borderRadius: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 50,
     marginBottom: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '60%', 
   },
   photoButtonText: {
-    color: "#fff",
-    fontWeight: "bold",
-    textAlign: "center",
+    color: "#FFFFFF",
+    fontSize: 16, 
+    fontWeight: 'bold',
   },
   photoContainer: {
     width: "100%",
