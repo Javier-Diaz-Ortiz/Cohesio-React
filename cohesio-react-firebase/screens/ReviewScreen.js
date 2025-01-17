@@ -291,14 +291,6 @@ const ReviewScreen = (props) => {
         ))}
       </Svg>
 
-
-      <TextInput
-        style={styles.input}
-        placeholder="Constructor's Email"
-        value={constructorEmail}
-        onChangeText={setConstructorEmail}
-      />
-
       <TextInput
         style={[styles.input, styles.commentInput]}
         placeholder="Comment"
