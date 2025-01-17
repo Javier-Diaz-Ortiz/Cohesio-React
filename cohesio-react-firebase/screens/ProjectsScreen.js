@@ -31,13 +31,14 @@ const ProjectsScreen = (props) => {
       const userProjects = [];
 
       querySnapshot.docs.forEach((doc) => {
-        const { direction, block, floor, apartment } = doc.data();
+        const { direction, block, floor, apartment,isCompleted } = doc.data();
         userProjects.push({
           id: doc.id,
           direction,
           block,
           floor,
           apartment,
+          isCompleted: isCompleted || false,  // Add a default value.
         });
       });
 
@@ -101,6 +102,9 @@ const ProjectsScreen = (props) => {
           <ListItem.Content>
             <ListItem.Title>{`Direction: ${project.direction}`}</ListItem.Title>
             <ListItem.Subtitle>{`Block: ${project.block}, Floor: ${project.floor}, Apartment: ${project.apartment}`}</ListItem.Subtitle>
+            {project.isCompleted && (
+              <Text style={styles.completedText}>COMPLETED</Text>
+            )}
           </ListItem.Content>
           <TouchableOpacity
             style={styles.deleteButton}
@@ -143,6 +147,10 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
   },
+  completedText: {
+    color: "green",
+    fontWeight: "bold",
+  }
 });
 
 export default ProjectsScreen;

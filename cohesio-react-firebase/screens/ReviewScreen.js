@@ -161,10 +161,6 @@ const ReviewScreen = (props) => {
   }
 
   const sendEmailWithPDF = async () => {
-    if (!constructorEmail || !/\S+@\S+\.\S+/.test(constructorEmail)) {
-      Alert.alert("Error", "Please enter a valid email address.");
-      return; 
-    }
     try {
       const timestamp = new Date().toISOString();
       const redRooms = rooms.filter((room) => room.isRed).map((room) => room.name);
@@ -181,9 +177,12 @@ const ReviewScreen = (props) => {
         redRooms: redRooms,
         timestamp: timestamp,
         userId: selectedData.email,
+        isCompleted: true,
       };
 
       await updateDoc(docToUpdate, dataToSave);
+      console.log("Success", "Project marked as completed.");
+      Alert.alert("Success", "Project marked as completed.");
 
       console.log("Success", "Data saved to Firebase successfully!");
     } catch (error) {
