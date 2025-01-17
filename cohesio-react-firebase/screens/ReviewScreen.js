@@ -99,21 +99,143 @@ const ReviewScreen = (props) => {
 
   const generatePDF = async () => {
     const redRooms = rooms.filter((room) => room.isRed);
-    const photoHTML = photo ? `<img src='${photo.uri}' alt='Attached photo' width='300'/>` : "";
+    const photoHTML = photo
+      ? `<img src='${photo.uri}' alt='Attached photo' style='width:100%; max-width:400px; border:3px solid #0056b3; border-radius:12px; margin:20px 0;'/>`
+      : "";
+    
     const htmlContent = `
-      <h1>Apartment Inspection Report</h1>
-      <p><strong>Direction:</strong> ${selectedData.direction}</p>
-      <p><strong>Block:</strong> ${selectedData.block}</p>
-      <p><strong>Floor:</strong> ${selectedData.floor}</p>
-      <p><strong>Apartment:</strong> ${selectedData.apartment}</p>
-      <h2>Marked Rooms:</h2>
-      <ul>
-        ${redRooms.map((room) => `<li>${room.name}</li>`).join("")}
-      </ul>
-      <h2>Comment:</h2>
-      <p>${comment || "No comment provided."}</p>
-      ${photoHTML}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Apartment Inspection Report</title>
+      <style>
+        body {
+          font-family: 'Helvetica Neue', 'Arial', sans-serif;
+          background: linear-gradient(120deg, #f4f4f9, #e6ebf5);
+          margin: 0;
+          padding: 0;
+          color: #333;
+        }
+        .container {
+          max-width: 900px;
+          margin: 40px auto;
+          background: #fff;
+          border-radius: 16px;
+          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+          overflow: hidden;
+        }
+        header {
+          background-color: #0056b3;
+          color: white;
+          padding: 20px 40px;
+          text-align: center;
+        }
+        header h1 {
+          font-size: 2.4em;
+          margin: 0;
+        }
+        header p {
+          font-size: 1em;
+          margin-top: 10px;
+        }
+        .content {
+          padding: 20px 40px;
+        }
+        .details {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 20px;
+          background: #f9f9f9;
+          padding: 20px;
+          border-radius: 12px;
+          margin-bottom: 20px;
+        }
+        .details p {
+          margin: 0;
+          font-size: 1em;
+        }
+        .details p strong {
+          color: #0056b3;
+        }
+        h2 {
+          color: #0056b3;
+          border-bottom: 2px solid #0056b3;
+          padding-bottom: 5px;
+          margin-bottom: 15px;
+        }
+        ul {
+          list-style: none;
+          padding-left: 0;
+        }
+        ul li {
+          padding: 10px;
+          margin-bottom: 5px;
+          background: #e6ebf5;
+          border-radius: 8px;
+        }
+        ul li:hover {
+          background: #d1d9e6;
+        }
+        .photo-section {
+          text-align: center;
+          margin-top: 20px;
+        }
+        .photo-section img {
+          transition: transform 0.3s ease;
+        }
+        .photo-section img:hover {
+          transform: scale(1.05);
+        }
+        footer {
+          background: #0056b3;
+          color: white;
+          text-align: center;
+          padding: 10px;
+          margin-top: 20px;
+        }
+        footer p {
+          margin: 0;
+          font-size: 0.9em;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <header>
+          <h1>Apartment Inspection Report</h1>
+          <p>Comprehensive and detailed assessment</p>
+        </header>
+        <div class="content">
+          <div class="details">
+            <p><strong>Direction:</strong> ${selectedData.direction}</p>
+            <p><strong>Block:</strong> ${selectedData.block}</p>
+            <p><strong>Floor:</strong> ${selectedData.floor}</p>
+            <p><strong>Apartment:</strong> ${selectedData.apartment}</p>
+          </div>
+          <h2>Marked Rooms</h2>
+          <ul>
+            ${redRooms.length > 0 
+              ? redRooms.map((room) => `<li>${room.name}</li>`).join("") 
+              : "<li>No marked rooms.</li>"
+            }
+          </ul>
+          <h2>Comment</h2>
+          <p>${comment || "No comment provided."}</p>
+          <div class="photo-section">
+            ${photoHTML}
+          </div>
+        </div>
+        <footer>
+          <p>© 2025 Cohesio. All rights reserved.</p>
+        </footer>
+      </div>
+    </body>
+    </html>
     `;
+    
+
 
     if (Platform.OS === 'web') {
       //Use jsPDF on the web.
