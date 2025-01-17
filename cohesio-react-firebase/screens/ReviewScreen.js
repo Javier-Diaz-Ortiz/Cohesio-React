@@ -238,29 +238,112 @@ const ReviewScreen = (props) => {
 
 
     if (Platform.OS === 'web') {
-      //Use jsPDF on the web.
+      // Importar jsPDF y preparar la generación del PDF
+      const { jsPDF } = require('jspdf');
       const doc = new jsPDF();
-      doc.setFontSize(18);
-      doc.text("Apartment Inspection Report", 10, 10);
+    
+   // Título principal con un estilo más llamativo
+doc.setFontSize(24);
+doc.setFont("helvetica", "bold");
+doc.setTextColor(0, 102, 204); // Color azul
+doc.text("Apartment Inspection Report", 105, 20, { align: "center" }); // Centrado en la página
 
-      doc.setFontSize(12);
-      doc.text(`Direction: ${selectedData.direction}`, 10, 20);
-      doc.text(`Block: ${selectedData.block}`, 10, 30);
-      doc.text(`Floor: ${selectedData.floor}`, 10, 40);
-      doc.text(`Apartment: ${selectedData.apartment}`, 10, 50);
-      doc.text("Marked Rooms:", 10, 60);
-      redRooms.forEach((room, index) => {
-        doc.text(`${index + 1}. ${room.name}`, 10, 70 + index * 10);
-      });
-      doc.text(`Comment: ${comment || "No comment provided."}`, 10, 90);
+// Línea separadora debajo del título
+doc.setDrawColor(0, 102, 204); // Azul
+doc.setLineWidth(1);
+doc.line(10, 25, 200, 25);
 
+// Datos principales del reporte en una sección estructurada
+doc.setFontSize(14);
+doc.setFont("helvetica", "bold");
+doc.setTextColor(0, 0, 0); // Negro
+doc.text("Property Details:", 10, 40); // Más espacio debajo del título
+
+// Formato atractivo para los datos principales
+doc.setFontSize(12);
+doc.setFont("helvetica", "normal");
+doc.text(`Direction: ${selectedData.direction}`, 15, 50);
+doc.text(`Block: ${selectedData.block}`, 15, 60);
+doc.text(`Floor: ${selectedData.floor}`, 15, 70);
+doc.text(`Apartment: ${selectedData.apartment}`, 15, 80);
+
+// Línea separadora para marcar inicio de otra sección
+doc.setDrawColor(150); // Gris
+doc.line(10, 90, 200, 90);
+
+// Lista de habitaciones marcadas con mayor separación
+doc.setFontSize(14);
+doc.setFont("helvetica", "bold");
+doc.setTextColor(0, 0, 0);
+doc.text("Marked Rooms:", 10, 110); // Mucho más espacio debajo del título
+
+// Agregar un recuadro o viñetas para las habitaciones marcadas
+doc.setFontSize(12);
+doc.setFont("helvetica", "normal");
+redRooms.forEach((room, index) => {
+  doc.setDrawColor(0); // Negro
+  doc.rect(10, 120 + index * 20 - 6, 190, 10); // Más espacio entre recuadros
+  doc.text(`${index + 1}. ${room.name}`, 15, 120 + index * 20);
+});
+
+// Línea separadora para comentarios
+doc.line(10, 130 + redRooms.length * 20 + 5, 200, 130 + redRooms.length * 20 + 5);
+
+// Comentarios con formato atractivo
+doc.setFontSize(14);
+doc.setFont("helvetica", "bold");
+doc.setTextColor(0, 0, 0);
+doc.text("Comment:", 10, 150 + redRooms.length * 20); // Más espacio debajo del título
+
+// Comentario en un recuadro
+doc.setFontSize(12);
+doc.setFont("helvetica", "normal");
+doc.setTextColor(80, 80, 80); // Gris oscuro
+doc.text(
+  comment || "No comment provided.",
+  15,
+  160 + redRooms.length * 20,
+  { maxWidth: 180 } // Ajustar texto largo al ancho del recuadro
+);
+doc.setDrawColor(0);
+doc.rect(10, 155 + redRooms.length * 20 - 5, 190, 20); // Recuadro para el comentario
+
+// Pie de página con un diseño profesional
+doc.setFontSize(10);
+doc.setFont("helvetica", "italic");
+doc.setTextColor(120); // Gris
+doc.text("Generated with Apartment Inspection Report System © 2025", 105, 290, {
+  align: "center",
+});
+
+
+
+      // Agregar imagen si está disponible
       if (photo) {
-        doc.addImage(photo.uri, "JPEG", 10, 100, 180, 160);
+        // Añadir imagen al PDF (escalada para encajar en la página)
+        doc.addImage(photo.uri, "JPEG", 10, 100 + redRooms.length * 10, 180, 120);
       }
+    
+      // Descargar automáticamente el archivo PDF
+      doc.save('Apartment_Inspection_Report.pdf'); // Descarga el archivo con este nombre
+    
+      // Crear un enlace "mailto" para abrir el cliente de correo
+      const email = "recipient@example.com"; // Cambiar por el correo del destinatario
+      const subject = encodeURIComponent("Apartment Inspection Report");
+      const body = encodeURIComponent(
+        "Attached is the apartment inspection report. Please review the details."
+      );
+    
+      // Redirigir al cliente de correo
+      const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
+      const a = document.createElement("a");
+      a.href = mailtoLink;
+      a.target = "_blank";
+      a.click();
+    }
+    
 
-      const pdfOutput = doc.output("blob");
-      return URL.createObjectURL(pdfOutput); // This returns a link to the PDF blob.
-    } else {
+        else {
       // Use react-native-html-to-pdf on Android.
       try {
         const { uri } = await Print.printToFileAsync({ html: htmlContent });
