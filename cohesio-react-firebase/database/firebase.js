@@ -1,9 +1,9 @@
-// Importa solo las funciones necesarias del SDK de Firebase
+
 import { initializeApp } from "firebase/app";
 import { getFirestore} from "firebase/firestore";
 import { getAuth } from 'firebase/auth';
 
-// Configuración de Firebase
+// Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyACFH9fZe09lQfQhC_gbZnWv1HVk_06vy4",
   authDomain: "cohesio-react-firebase.firebaseapp.com",
@@ -18,4 +18,4 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 export const auth = getAuth(app);
-export default db; // Exporta las funciones necesarias
+export default db; 

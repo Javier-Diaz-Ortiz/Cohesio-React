@@ -239,7 +239,6 @@ const ReviewScreen = (props) => {
 
 
     if (Platform.OS === 'web') {
-      // Importar jsPDF y preparar la generación del PDF
       const { jsPDF } = require('jspdf');
       const doc = new jsPDF();
     
