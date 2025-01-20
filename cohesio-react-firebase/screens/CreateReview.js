@@ -37,7 +37,7 @@ const CreateReview = (props) => {
       try {
         const projectsCollection = collection(db, "projects");
         
-        // Agregar el documento y obtener su referencia
+        // Add the document and obtain its reference
         const newDocRef = await addDoc(projectsCollection, {
           apartment: state.apartment,
           block: state.block,
@@ -52,9 +52,9 @@ const CreateReview = (props) => {
         console.log("New Project ID:", newDocRef.id);
         console.log("Project successfully added.", newDocRef.id);
   
-        // Navegar con el ID del documento recién creado
+        // Navigate with the ID of the newly created document
         props.navigation.navigate("ReviewScreen", {
-          projectId: newDocRef.id, // ID correcto del documento
+          projectId: newDocRef.id, 
           emailOfUser: userId,
           direction: state.direction,
           block: state.block,
