@@ -9,7 +9,6 @@ import CreateReview from './screens/CreateReview';
 import ReviewScreen from './screens/ReviewScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
-import UserHomeScreen from './screens/UserHomeScreen';
 
 function MyStack(){
   return (
@@ -20,7 +19,6 @@ function MyStack(){
       <Stack.Screen name="ReviewScreen"  component={ReviewScreen} options={{title: 'Review Screen'}} />
       <Stack.Screen name="LoginScreen"  component={LoginScreen} options={{title: 'Login'}} />
       <Stack.Screen name="RegisterScreen"  component={RegisterScreen} options={{title: 'Register'}} />
-      <Stack.Screen name="UserHomeScreen"  component={UserHomeScreen} options={{title: 'User Home Screen'}} />
       {/* TODO : put all screens here  */}
 
       </Stack.Navigator>
