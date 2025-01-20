@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../database/firebase'; // Asegúrate de tener configurada tu conexión a Firebase
+import { auth } from '../database/firebase'; 
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -9,7 +9,7 @@ const LoginScreen = ({ navigation }) => {
   const [error, setError] = useState({ email: '', password: '', general: '' });
 
   const handleLogin = async () => {
-    setError({ email: '', password: '', general: '' }); // Reinicia los errores
+    setError({ email: '', password: '', general: '' }); 
 
     if (!email) {
       setError((prev) => ({ ...prev, email: 'Email is required' }));
@@ -24,7 +24,7 @@ const LoginScreen = ({ navigation }) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       console.log('User logged in:', email);
-      navigation.navigate('ProjectsScreen', { email }); // Navegar a la pantalla de inicio del usuario asociando eso al email
+      navigation.navigate('ProjectsScreen', { email });
     } catch (error) {
       if (error.code === 'auth/user-not-found') {
         setError((prev) => ({ ...prev, general: 'The email address is not registered.' }));
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     backgroundColor: '#fff',
     paddingHorizontal: 15,
-    marginBottom: 5, // Espacio más ajustado
+    marginBottom: 5, 
     borderRadius: 8,
     fontSize: 16,
     color: '#333',
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   errorText: {
-    color: '#e63946', // Rojo suave
+    color: '#e63946', 
     fontSize: 14,
     marginBottom: 10,
     textAlign: 'left',

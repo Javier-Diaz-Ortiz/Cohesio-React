@@ -45,7 +45,7 @@ const ProjectsScreen = (props) => {
       setProjects(userProjects);
     });
 
-    return () => unsubscribe(); //Clean the listener
+    return () => unsubscribe(); 
   }, [email]);
 
   const deleteProject = async (projectId) => {

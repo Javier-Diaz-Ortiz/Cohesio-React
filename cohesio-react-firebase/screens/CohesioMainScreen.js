@@ -215,8 +215,8 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '60%', // Changed from screenWidth * 0.6 to a percentage.
-  },
+    width: '60%', 
+    },
   secondaryButton: { backgroundColor: '#7B4397' },
   secondaryButtonText: { color: '#FFFFFF' },
   buttonText: { color: '#4A90E2', fontSize: 16, fontWeight: 'bold' },
