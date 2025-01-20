@@ -65,7 +65,7 @@ const ReviewScreen = (props) => {
     const randomFactor =
       (direction.length + block.length + parseInt(floor) + parseInt(apartment)) % 3;
 
-    const predefinedLayouts = [ //TODO Put more please and change the randomFactor
+    const predefinedLayouts = [ 
       [
         { id: 1, name: "Living Room", x: 10, y: 10, width: 100, height: 70 },
         { id: 2, name: "Kitchen", x: 120, y: 10, width: 80, height: 70 },
@@ -245,11 +245,11 @@ const ReviewScreen = (props) => {
   // Título principal con un estilo más llamativo
 doc.setFontSize(24);
 doc.setFont("helvetica", "bold");
-doc.setTextColor(0, 102, 204); // Color azul
+doc.setTextColor(0, 102, 204); 
 doc.text("Apartment Inspection Report", 105, 20, { align: "center" }); // Centrado en la página
 
 // Línea separadora debajo del título
-doc.setDrawColor(0, 102, 204); // Azul
+doc.setDrawColor(0, 102, 204); 
 doc.setLineWidth(1);
 doc.line(10, 25, 200, 25);
 
@@ -268,7 +268,7 @@ doc.text(`Floor: ${selectedData.floor}`, 15, 70);
 doc.text(`Apartment: ${selectedData.apartment}`, 15, 80);
 
 // Línea separadora para marcar inicio de otra sección
-doc.setDrawColor(150); // Gris
+doc.setDrawColor(150); 
 doc.line(10, 90, 200, 90);
 
 // Lista de habitaciones marcadas con mayor separación
@@ -307,7 +307,7 @@ if (photo) {
   // Escribir "Comment:"
   doc.setFontSize(14);
   doc.setFont("helvetica", "bold");
-  doc.setTextColor(0, 0, 0); // Color negro
+  doc.setTextColor(0, 0, 0); 
   doc.text("Comment:", textX, textY);
 
   // Ajustar la posición del texto del comentario para que no se sobreponga con el recuadro
@@ -328,10 +328,10 @@ if (photo) {
   const imageYPosition = commentTextY + 20; // Posición de la imagen debajo del comentario
 
   // Definir tamaño de la imagen más pequeño, por ejemplo, al 30% del tamaño del contenedor
-  const scaleFactor = 0.3; // Factor de escala (30% del tamaño del contenedor)
+  const scaleFactor = 0.3; 
   const imageAspectRatio = photo.width / photo.height || 1; // Relación de aspecto de la imagen
-  const containerWidth = 190; // Ancho de la imagen
-  const containerHeight = 80; // Alto del contenedor
+  const containerWidth = 190; 
+  const containerHeight = 80; 
   let imageWidth = containerWidth * scaleFactor; // Nuevo ancho de la imagen
   let imageHeight = imageWidth / imageAspectRatio; // Mantener la proporción de la imagen
 
