@@ -23,6 +23,7 @@ import { jsPDF } from "jspdf"; //For Web.
 import * as FileSystem from 'expo-file-system';
 
 
+
 const ReviewScreen = (props) => {
   console.log("Route Params:", props.route.params);
   const projectId = props.route.params?.projectId;
@@ -44,6 +45,8 @@ const ReviewScreen = (props) => {
   const [constructorEmail, setConstructorEmail] = useState("");
   const [comment, setComment] = useState("");
   const [photo, setPhoto] = useState(null);
+  const [base64Image, setBase64Image] = useState(null);
+
 
      //Permissions
      const checkPermissions = async () => {
@@ -105,8 +108,22 @@ const ReviewScreen = (props) => {
 
   const generatePDF = async () => {
     const redRooms = rooms.filter((room) => room.isRed);
-    const photoHTML = photo
-      ? `<img src='${photo.uri}' alt='Attached photo' style='width:100%; max-width:400px; border:3px solid #0056b3; border-radius:12px; margin:20px 0;'/>`
+
+    
+    let base64Image = null;
+
+    if (photo && photo.uri) {
+      try {
+        base64Image = await FileSystem.readAsStringAsync(photo.uri, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+      } catch (error) {
+        console.error("Error converting image to Base64:", error);
+      }
+    }
+  
+    const photoHTML = base64Image
+      ? `<img src='data:image/jpeg;base64,${base64Image}' alt='Attached photo' style='width:100%; max-width:400px; border:3px solid #0056b3; border-radius:12px; margin:20px 0;'/>`
       : "";
     
     const htmlContent = `
@@ -248,47 +265,47 @@ const ReviewScreen = (props) => {
       const doc = new jsPDF();
     
 
-doc.setFontSize(24);
-doc.setFont("helvetica", "bold");
-doc.setTextColor(0, 102, 204); 
-doc.text("Apartment Inspection Report", 105, 20, { align: "center" }); 
+      doc.setFontSize(24);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(0, 102, 204); 
+      doc.text("Apartment Inspection Report", 105, 20, { align: "center" }); 
 
-//Separator line below the title
-doc.setDrawColor(0, 102, 204); 
-doc.setLineWidth(1);
-doc.line(10, 25, 200, 25);
-
-
-doc.setFontSize(14);
-doc.setFont("helvetica", "bold");
-doc.setTextColor(0, 0, 0); 
-doc.text("Property Details:", 10, 40); 
+      //Separator line below the title
+      doc.setDrawColor(0, 102, 204); 
+      doc.setLineWidth(1);
+      doc.line(10, 25, 200, 25);
 
 
-doc.setFontSize(12);
-doc.setFont("helvetica", "normal");
-doc.text(`Direction: ${selectedData.direction}`, 15, 50);
-doc.text(`Block: ${selectedData.block}`, 15, 60);
-doc.text(`Floor: ${selectedData.floor}`, 15, 70);
-doc.text(`Apartment: ${selectedData.apartment}`, 15, 80);
-
-doc.setDrawColor(150); 
-doc.line(10, 90, 200, 90);
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(0, 0, 0); 
+      doc.text("Property Details:", 10, 40); 
 
 
-doc.setFontSize(14);
-doc.setFont("helvetica", "bold");
-doc.setTextColor(0, 0, 0);
-doc.text("Marked Rooms:", 10, 110); 
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+      doc.text(`Direction: ${selectedData.direction}`, 15, 50);
+      doc.text(`Block: ${selectedData.block}`, 15, 60);
+      doc.text(`Floor: ${selectedData.floor}`, 15, 70);
+      doc.text(`Apartment: ${selectedData.apartment}`, 15, 80);
+
+      doc.setDrawColor(150); 
+      doc.line(10, 90, 200, 90);
 
 
-doc.setFontSize(12);
-doc.setFont("helvetica", "normal");
-redRooms.forEach((room, index) => {
-  doc.setDrawColor(0); 
-  doc.rect(10, 120 + index * 20 - 6, 190, 10); 
-  doc.text(`${index + 1}. ${room.name}`, 15, 120 + index * 20);
-});
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(0, 0, 0);
+      doc.text("Marked Rooms:", 10, 110); 
+
+
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+      redRooms.forEach((room, index) => {
+        doc.setDrawColor(0); 
+        doc.rect(10, 120 + index * 20 - 6, 190, 10); 
+        doc.text(`${index + 1}. ${room.name}`, 15, 120 + index * 20);
+      });
 
 
 doc.line(10, 130 + redRooms.length * 20 + 5, 200, 130 + redRooms.length * 20 + 5);
@@ -356,9 +373,9 @@ if (photo) {
     imageHeight > 0
   ) {
     
-    doc.addImage(photo.uri, "JPEG", imageX, imageY, imageWidth, imageHeight);
+    doc.addImage(`data:image/jpeg;base64,${base64Image}`, "JPEG", imageX, imageY, imageWidth, imageHeight);
   } else {
-    console.error("Error: Coordenadas o dimensiones de la imagen no válidas");
+    console.error("Error: Invalid image or dimensions");
   }
 }
 
@@ -382,19 +399,18 @@ if (photo) {
     
 
         else {
-      // Use react-native-html-to-pdf on Android.
-      try {
-        const { uri } = await Print.printToFileAsync({ html: htmlContent });
-        if (Platform.OS !== "web" && await Sharing.isAvailableAsync()) {
-          await Sharing.shareAsync(uri);
+          try {
+            const { uri } = await Print.printToFileAsync({ html: htmlContent });
+            if (Platform.OS !== "web" && await Sharing.isAvailableAsync()) {
+              await Sharing.shareAsync(uri);
+            }
+            return uri;
+          } catch (error) {
+            console.error("Error generating PDF:", error);
+            Alert.alert("Error", "Failed to generate PDF.");
+            return null;
+          }
         }
-        return uri;
-      } catch (error) {
-        console.error("Error generating PDF:", error);
-        Alert.alert("Error", "Failed to generate PDF.");
-        return null;
-      }
-    }
   };
 
   function mandarEmail(){
@@ -524,21 +540,33 @@ if (photo) {
 
 
               if (uri) {
-                // Ορισμός νέας τοποθεσίας για αποθήκευση της εικόνας
+                // Set a new location to save the image
                 const newUri = FileSystem.documentDirectory + 'image.jpg';
 
                 try {
-                  // Μετακίνηση της εικόνας στην μόνιμη τοποθεσία
+                  // Move the image to the permanent location
                   await FileSystem.moveAsync({
                     from: uri,
                     to: newUri,
                   });
 
-                  // Ενημέρωση του state για να εμφανιστεί η εικόνα
+                  // Update the state to display the image
                   setPhoto({ uri: newUri });
                   console.log("Image saved to:", newUri);
                 } catch (error) {
                   console.log("Error saving image:", error);
+                }
+
+                // change image to Base64
+                try {
+                  const base64Image = await FileSystem.readAsStringAsync(newUri, {
+                    encoding: FileSystem.EncodingType.Base64,
+                  });
+                  console.log("Base64 Image:", base64Image);
+                  // Ενημερώνουμε το state ή αποθηκεύουμε το base64 αν χρειάζεται
+                  setBase64Image(`data:image/jpeg;base64,${base64Image}`);
+                } catch (error) {
+                  console.error("Error converting image to Base64:", error);
                 }
             }
           } else {
@@ -594,6 +622,15 @@ if (photo) {
         multiline
       />
 
+      <TouchableOpacity style={styles.photoButton} onPress={sendEmailWithPDF}>
+        <View>
+        <Textilia style={styles.photoButtonText}>Share</Textilia  >
+        </View>
+      </TouchableOpacity>
+
+
+
+
       {photo && photo.uri ? (
         <Image source={{ uri: photo.uri }} style={styles.photo} />
       ) : (
@@ -606,11 +643,7 @@ if (photo) {
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.photoButton} onPress={sendEmailWithPDF}>
-        <View>
-        <Textilia style={styles.photoButtonText}>Share</Textilia  >
-        </View>
-      </TouchableOpacity>
+      
     </ScrollView>
   );
 };
