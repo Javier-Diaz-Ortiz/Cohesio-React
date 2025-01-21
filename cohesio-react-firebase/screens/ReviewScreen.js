@@ -7,6 +7,7 @@ import {
   ScrollView,
   StyleSheet,
   Alert,
+  Linking,
   TextInput,
   Image,
   TouchableOpacity,
@@ -15,11 +16,12 @@ import {
 } from "react-native";
 import Svg, { Rect,Text } from "react-native-svg";
 import { collection, addDoc,updateDoc ,doc} from "firebase/firestore";
-import RNHTMLtoPDF from "react-native-html-to-pdf";
-import { launchImageLibrary } from "react-native-image-picker";
 import Mailer from "react-native-mail";
 import db from "../database/firebase"; // Firebase setup.
+import * as ImagePicker from 'expo-image-picker';
 import { jsPDF } from "jspdf"; //For Web.
+import * as FileSystem from 'expo-file-system';
+
 
 const ReviewScreen = (props) => {
   console.log("Route Params:", props.route.params);
@@ -55,6 +57,9 @@ const ReviewScreen = (props) => {
     useEffect(() => {
       checkPermissions();
     }, []);
+
+    const [selectedImage, setSelectedImage] = useState(null);
+
   
 
   useEffect(() => {
@@ -461,7 +466,7 @@ if (photo) {
     }
   };
 
-  const selectPhoto = () => {
+  const selectPhoto = async () => {
     if (Platform.OS === "web") {
       // Use a file input on the web.
       const input = document.createElement("input");
@@ -479,25 +484,77 @@ if (photo) {
       };
       input.click();
     } else {
-      //Use launchImageLibrary on Android/iOS.
-      launchImageLibrary(
-        { mediaType: "photo", selectionLimit: 1 },
-        (response) => {
-          if (response.didCancel) {
-            console.log("User cancelled photo picker");
-          } else if (response.errorCode) {
-            console.error("ImagePicker Error: ", response.errorMessage);
+      
+      try {
+        // Request permissions to access the gallery
+        const { status } = await MediaLibrary.requestPermissionsAsync();
+  
+        if (status !== "granted") {
+          Alert.alert(
+            "Permission Denied",
+            "You need to enable permissions to access the gallery!", 
+            [
+              {
+                text: 'Go to Settings',
+                onPress: () => Linking.openSettings(), // open settings
+              },
+              {
+                text: 'Cancel',
+                style: 'cancel',
+              },
+            ]
+          );
+          return;
+        }
+        
+  
+        // Open photo gallery
+        const result = await ImagePicker.launchImageLibraryAsync({
+          allowsEditing: true,
+          quality: 1,
+        });
+  
+        console.log('Result:', result);
+
+        if (!result.canceled ) {
+          //Make sure the URI is valid
+          if (result.assets && result.assets.length > 0 && result.assets[0].uri) {
+            const uri = result.assets[0].uri;
+            console.log('Selected Image URI:', uri); // check URI
+
+
+
+              if (uri) {
+                // Ορισμός νέας τοποθεσίας για αποθήκευση της εικόνας
+                const newUri = FileSystem.documentDirectory + 'image.jpg';
+
+                try {
+                  // Μετακίνηση της εικόνας στην μόνιμη τοποθεσία
+                  await FileSystem.moveAsync({
+                    from: uri,
+                    to: newUri,
+                  });
+
+                  // Ενημέρωση του state για να εμφανιστεί η εικόνα
+                  setPhoto({ uri: newUri });
+                  console.log("Image saved to:", newUri);
+                } catch (error) {
+                  console.log("Error saving image:", error);
+                }
+            }
           } else {
-            setPhoto(response.assets[0]);
+            console.log('User canceled image selection');
           }
         }
-      );
-    }
+      } catch (error) {
+        console.error("Error selecting photo:", error);
+      }
+    };
   };
 
   return (
     <ScrollView 
-    contentContainerStyle={styles.container}
+    contentContainerStyle={[styles.container, { paddingBottom: 50 }]}  
     keyboardShouldPersistTaps="handled"  
     scrollEventThrottle={16}  
     showsVerticalScrollIndicator={true}  
@@ -538,15 +595,15 @@ if (photo) {
         multiline
       />
 
-      {photo && (
-        <View style={styles.photoContainer}>
-          <Image source={{ uri: photo.uri }} style={styles.photo} />
-        </View>
+      {photo && photo.uri ? (
+        <Image source={{ uri: photo.uri }} style={styles.photo} />
+      ) : (
+        <Text>No image selected</Text>
       )}
 
       <TouchableOpacity style={styles.photoButton} onPress={selectPhoto}>
-      <View>
-        <Textilia style={styles.photoButtonText}>Select Photo</Textilia>
+        <View>
+          <Textilia style={styles.photoButtonText}>Select Photo</Textilia>
         </View>
       </TouchableOpacity>
 
@@ -608,6 +665,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 10,
   },
 });
 
