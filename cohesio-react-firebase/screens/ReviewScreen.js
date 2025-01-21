@@ -272,7 +272,6 @@ doc.text(`Block: ${selectedData.block}`, 15, 60);
 doc.text(`Floor: ${selectedData.floor}`, 15, 70);
 doc.text(`Apartment: ${selectedData.apartment}`, 15, 80);
 
-
 doc.setDrawColor(150); 
 doc.line(10, 90, 200, 90);
 
@@ -309,7 +308,7 @@ if (photo) {
 
   doc.setFontSize(14);
   doc.setFont("helvetica", "bold");
-  doc.setTextColor(0, 0, 0); // Color negro
+  doc.setTextColor(0, 0, 0); 
   doc.text("Comment:", textX, textY);
 
   // Adjust the position of the comment text so that it does not overlap with the box
